@@ -45,11 +45,16 @@ def register_admin(app):
     f_admin.add_view(CustomView(name='CustomJ'))
     f_admin.add_view(
         CustomModelView(
-            ContentDictionary, db.session, category='Models'
+            ContentChannel, db.session, category='Models'
         )
     )
     f_admin.add_view(
         CustomModelView(
-            ContentChannel, db.session, category='Models'
+            ContentArticle, db.session, category='Models'
+        )
+    )
+    f_admin.add_view(
+        CustomModelView(
+            ContentDictionary, db.session, category='Models'
         )
     )

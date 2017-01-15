@@ -1,6 +1,8 @@
 from sqlalchemy.inspection import inspect
 from datetime import datetime
 from webapp.server.model.db_connection import db
+from base64 import b64encode
+from os import urandom
 
 _table_content_channel_ = "Content_Channel"
 _table_content_tag_ = "Content_Tag"
@@ -16,23 +18,24 @@ _table_content_relation_article_account = "Content_Relation_Article_Account_2017
 
 class ContentChannel(db.Model):
     __tablename__ = _table_content_channel_
-    id = db.Column('ChannelID', db.String(32), primary_key=True)
-    channel_title = db.Column('ChannelTitle', db.String(50))
+    id = db.Column('ID', db.String(32), primary_key=True)
+    channel_id = db.Column('ChannelID', db.String(32), nullable=False, unique=True, index=True)
+    channel_title = db.Column('ChannelTitle', db.String(50), nullable=False, )
     channel_desc = db.Column('Desc', db.String(255))
     parent_channel_id = db.Column('ParentChannelID', db.String(32))
     channel_level = db.Column('ChannelLevel', db.SmallInteger(), nullable=False)
-    display_order = db.Column('DisplayOrder', db.SmallInteger())
+    display_order = db.Column('DisplayOrder', db.SmallInteger(), nullable=False, default=-1)
     valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1)
 
     create_date = db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('CreateIP', db.String(50))
     create_user_id = db.Column('CreateUserID', db.String(32))
-    update_date = db.Column('UpdateDate', db.DateTime())
+    update_date = db.Column('UpdateDate', db.DateTime(), nullable=False, default=datetime.now())
     update_ip = db.Column('UpdateIP', db.String(50))
     update_user_id = db.Column('UpdateUserID', db.String(32))
 
     def __init__(self):
-        self.id = "100010"
+        self.id = _random_key(self, "CC")
 
     def __repr__(self):
         return "<Post '{}'>".format(self.tag_item_title)
@@ -77,12 +80,12 @@ class ContentArticle(db.Model):
     format_type = db.Column('FormatType', db.SmallInteger, nullable=False, default=0)
     body_text = db.Column('BodyText', db.Text())
     desc = db.Column('Desc', db.String(255))
-    channel_id = db.Column('ChannelID', db.String(32), nullable=False)
-    tag_id = db.Column('TagID', db.String(32))
+    channel_id = db.Column('ChannelID', db.String(32), nullable=False, index=True)
+    tag_id = db.Column('TagID', db.String(32), index=True)
     publish_status = db.Column('PublishStatus', db.SmallInteger(), nullable=False, default=1)
     original_resource = db.Column('OriginalResource', db.String(50))  # original resource
 
-    create_user_id = db.Column('CreateUserID', db.String(32), nullable=False)
+    create_user_id = db.Column('CreateUserID', db.String(32), nullable=False, index=True)
     create_date = db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('CreateIP', db.String(50))
     create_device_serial = db.Column('CreateDeviceSerial', db.String(50))
@@ -93,9 +96,10 @@ class ContentArticle(db.Model):
     last_update_user_id = db.Column('LastUpdateUserID', db.String(32))
     last_update_ip = db.Column('LastUpdateIP', db.String(50))
     last_update_date = db.Column('LastUpdateDate', db.DateTime())
-    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1)
+    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1, index=True)
 
-    def __init__(self, title):
+    def __init__(self, title=None):
+        self.id = _random_key(self, "CA")
         self.title = title
 
     def __repr__(self):
@@ -109,16 +113,16 @@ class ContentDictionary(db.Model):
     __tablename__ = _table_content_dictionary_de
     id = db.Column(db.Integer(), primary_key=True)
     wort = db.Column('Wort', db.String(32), nullable=False, unique=True)
-    wort_sex = db.Column('WortSex', db.String(10), nullable=False, default='-')
-    plural = db.Column('Plural', db.String(32), nullable=False, default='')
+    wort_sex = db.Column('WortSex', db.String(10), nullable=False, default='-', index=True)
+    plural = db.Column('Plural', db.String(32), nullable=False, default='-')
     wort_zh = db.Column('Zh', db.String(50))
     wort_en = db.Column('En', db.String(50))
-    level = db.Column('Level', db.String(10), nullable=False, default='A')
-    type = db.Column('Type', db.String(10), nullable=False, default='')
+    level = db.Column('Level', db.String(10), nullable=False, default='A', index=True)
+    type = db.Column('Type', db.String(10), nullable=False, default='', index=True)
     synonym = db.Column('Synonym', db.String(50))
     konjugation = db.Column('Konjugation', db.String(32))
-    is_regel = db.Column('IsRegel', db.SmallInteger, nullable=False, default=1)
-    is_recommend = db.Column('IsRecommend', db.SmallInteger, nullable=False, default=0)
+    is_regel = db.Column('IsRegel', db.SmallInteger, nullable=False, default=1, index=True)
+    is_recommend = db.Column('IsRecommend', db.SmallInteger, nullable=False, default=0, index=True)
     is_ignore = db.Column('IsIgnore', db.SmallInteger, nullable=False, default=0)
     create_date = db.Column('CreateDate', db.DateTime(), nullable=False,
                             default=datetime.now())
@@ -165,8 +169,9 @@ class ContentComment(db.Model):
     create_date = db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('CreateIP', db.String(50))
     create_device_serial = db.Column('CreateDeviceSerial', db.String(50))
-    article_id = db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'), nullable=False)
-    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1)
+    article_id = db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'),
+                           nullable=False, index=True)
+    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1, index=True)
 
     def parse(self):
         return serialize(self)
@@ -181,8 +186,9 @@ class ContentLike(db.Model):
     create_date = db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('CreateIP', db.String(50))
     create_device_serial = db.Column('CreateDeviceSerial', db.String(50))
-    article_id = db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'), nullable=False)
-    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1)
+    article_id = db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'),
+                           nullable=False, index=True)
+    valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1, index=True)
 
     def parse(self):
         return serialize(self)
@@ -230,3 +236,13 @@ content_relation_account = db.Table(
 
 def serialize(self):
     return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+
+def _random_key(self, table_tag=None):
+    random_bytes = urandom(16)
+    _key = datetime.now().strftime('%y%m') + b64encode(random_bytes).decode('utf-8')
+
+    if table_tag is None:
+        return _key
+    else:
+        return table_tag + _key
