@@ -19,7 +19,6 @@ def create_app(object_name):
 
     register_api_add_resource(_app)
     register_db_connection(_app)
-
     register_blueprint(_app)
     register_admin(_app)
     register_login(_app)
@@ -27,13 +26,7 @@ def create_app(object_name):
     return _app
 
 
-def hello_user2(username):
-    return "Hello Joe !"
-
-
 app = create_app(BasicConfig)
-app.add_url_rule('/', 'hello_user2', hello_user2, methods=['POST'])
-
 if __name__ == '__main__':
     app.run(host=BasicConfig.Host_URL, port=BasicConfig.Host_Port)
 
