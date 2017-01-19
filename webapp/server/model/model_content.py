@@ -1,8 +1,6 @@
 from sqlalchemy.inspection import inspect
 from datetime import datetime
-from webapp.server.model.db_connection import db
-from base64 import b64encode
-from os import urandom
+from webapp.server.model.db_connection import db, custom_random_key
 
 _table_content_channel_ = "Content_Channel"
 _table_content_tag_ = "Content_Tag"
@@ -35,7 +33,7 @@ class ContentChannel(db.Model):
     update_user_id = db.Column('UpdateUserID', db.String(32))
 
     def __init__(self):
-        self.id = _random_key(self, "CC")
+        self.id = custom_random_key(self, "CC")
 
     def __repr__(self):
         return "<Post '{}'>".format(self.tag_item_title)
@@ -99,7 +97,7 @@ class ContentArticle(db.Model):
     valid_status = db.Column('ValidStatus', db.SmallInteger(), nullable=False, default=1, index=True)
 
     def __init__(self, title=None):
-        self.id = _random_key(self, "CA")
+        self.id = custom_random_key(self, "CA")
         self.title = title
 
     def __repr__(self):
@@ -237,12 +235,3 @@ content_relation_account = db.Table(
 def serialize(self):
     return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
 
-
-def _random_key(self, table_tag=None):
-    random_bytes = urandom(16)
-    _key = datetime.now().strftime('%y%m') + b64encode(random_bytes).decode('utf-8')
-
-    if table_tag is None:
-        return _key
-    else:
-        return table_tag + _key

@@ -1,6 +1,8 @@
 from sqlalchemy.inspection import inspect
+from flask_login import AnonymousUserMixin
 from datetime import datetime
-from webapp.server.model.db_connection import db
+from webapp.server.model.db_connection import db, custom_random_key
+
 
 _table_account_ = "Account_Profile"
 _table_account_auth_token = "Account_Auth_Token_201701"
@@ -8,7 +10,7 @@ _table_account_auth_token = "Account_Auth_Token_201701"
 
 class User(db.Model):
     __tablename__ = _table_account_
-    user_id = db.Column('UserID', db.String(32), primary_key=True)
+    id = db.Column('UserID', db.String(32), primary_key=True)
     app_ver = db.Column('AppVersion', db.String(50))
     # ios.phone/ios.web
     site_code = db.Column('SiteCode', db.String(50))
@@ -18,7 +20,7 @@ class User(db.Model):
     email = db.Column('Email', db.String(50))
     mobile = db.Column('Mobile', db.String(50))
 
-    username = db.Column('UserName', db.String(50), nullable=False)
+    real_name = db.Column('UserName', db.String(50), nullable=False)
     gender = db.Column('Gender', db.String(50))
     birthday = db.Column('Birthday', db.DateTime())
     profile_desc = db.Column('ProfileDesc', db.String(255))
@@ -45,16 +47,33 @@ class User(db.Model):
     auth_activate_code = db.Column('AuthActivateCode', db.String(64))
     auth_activate_date = db.Column('AuthActivateDate', db.DateTime())
 
-    def __init__(self, account):
+    def __init__(self, account=None):
+        self.id = custom_random_key(self, "AP")
         self.account_name = account
-
-    def __repr__(self):
-        # formats what is shown in the shell when print is
-        # called on it
-        return '<User {}>'.format(self.username)
 
     def parse(self):
         return serialize(self)
+
+    # 一般而言，这个方法应该只返回 True，除非表示用户的对象因为某些原因不允许被认证。
+    def is_authenticated(self):
+        if isinstance(self, AnonymousUserMixin):
+            return False
+        else:
+            return True
+
+    # is_anonymous方法：为那些不被获准登录的用户返回True。
+    def is_anonymous(self):
+        if isinstance(self, AnonymousUserMixin):
+            return True
+        else:
+            return False
+
+    # 应该返回 True，除非用户是无效的，比如他们的账号被禁止。
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return str(self.id)
 
 
 # 01-12

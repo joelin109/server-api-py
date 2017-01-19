@@ -1,14 +1,25 @@
 from webapp.server.model.model_content import db, ContentDictionary
 from webapp.server.logic.util_handler import UtilHandler
 from datetime import datetime
+from sqlalchemy.sql.expression import or_
 
 
 class DictionaryHandler(UtilHandler):
-    def word_list(self, filters=None):
+    def word_list(self, word_filter=None):
         # .filter_by(is_regel=0)
-        _wordPage = ContentDictionary.query.order_by(
-            ContentDictionary.wort.asc()
-        ).paginate(1, 50, False)
+        if word_filter is None:
+            _wordPage = ContentDictionary.query.order_by(
+                ContentDictionary.wort.asc()
+            ).paginate(1, 80, False)
+
+        else:
+            # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
+            _wordPage = ContentDictionary.query.filter(
+                or_(ContentDictionary.wort.startswith(word_filter.word_channel.lower()),
+                    ContentDictionary.wort.startswith(word_filter.word_channel.upper()))
+            ).order_by(
+                ContentDictionary.wort.asc()
+            ).paginate(1, 80, False)
 
         return self.result_page(_wordPage)
 
@@ -43,3 +54,18 @@ class DictionaryHandler(UtilHandler):
 
         _word = ContentDictionary.query.filter_by(wort=word_id).first()
         return _word
+
+
+class WordFilter:
+    page = 1
+    is_recommend = -1
+    is_regel = -1
+    word_channel = ""
+    word_sex = ""
+    word_type = ""
+
+    def parse(self, filters=None):
+        self.is_recommend = 1
+        # self.word_type = filters["type"]
+        # self.word_sex = filters["sex"]
+        self.word_channel = filters["channel"]

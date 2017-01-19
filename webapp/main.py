@@ -4,7 +4,8 @@ from webapp.server.api.api_source import *
 from webapp.server.model.db_connection import *
 
 from webapp.uicontroller.blueprint import register_blueprint
-from webapp.uicontroller.admin import register_admin
+from webapp.uicontroller.extension_admin import register_admin
+from webapp.uicontroller.extension_login import register_login
 import asyncio
 
 
@@ -21,6 +22,7 @@ def create_app(object_name):
 
     register_blueprint(_app)
     register_admin(_app)
+    register_login(_app)
 
     return _app
 
