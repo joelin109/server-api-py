@@ -4,12 +4,12 @@ from datetime import datetime
 from webapp.server.model.db_connection import db, custom_random_key
 
 
-_table_account_ = "Account_Profile"
-_table_account_auth_token = "Account_Auth_Token_201701"
+_table_account_ = "account_profile"
+_table_account_auth_token = "account_auth_token_201701"
 
 
 class User(db.Model):
-    __tablename__ = _table_account_
+    __tablename__ = _table_account_.lower()
     id = db.Column('UserID', db.String(32), primary_key=True)
     app_ver = db.Column('AppVersion', db.String(50))
     # ios.phone/ios.web
@@ -78,7 +78,7 @@ class User(db.Model):
 
 # 01-12
 class UserAuthToken(db.Model):
-    __tablename__ = _table_account_auth_token
+    __tablename__ = _table_account_auth_token.lower()
     user_id = db.Column('UserID', db.Integer(), primary_key=True)
     token = db.Column('Token', db.String(64), primary_key=True)
     account_name = db.Column('AccountName', db.String(32))

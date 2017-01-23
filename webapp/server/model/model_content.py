@@ -2,20 +2,20 @@ from sqlalchemy.inspection import inspect
 from datetime import datetime
 from webapp.server.model.db_connection import db, custom_random_key
 
-_table_content_channel_ = "Content_Channel"
-_table_content_tag_ = "Content_Tag"
-_table_content_article_ = "Content_Article"
-_table_content_article_de = "Content_Article_De"
-_table_content_dictionary_de = "Content_Dictionary_De"
-_table_content_comment_ = "Content_Comment_201701"
-_table_content_like_ = "Content_Like_201701"
-_table_content_statistic_article = "Content_Statistic_Article"
-_table_content_relation_article_tag = "Content_Relation_Article_Tag"
-_table_content_relation_article_account = "Content_Relation_Article_Account_201701"
+_table_content_channel_ = "content_channel"
+_table_content_tag_ = "content_tag"
+_table_content_article_ = "content_article"
+_table_content_article_de = "content_article_de"
+_table_content_dictionary_de = "content_dictionary_de"
+_table_content_comment_ = "content_comment_201701"
+_table_content_like_ = "content_Like_201701"
+_table_content_statistic_article = "content_statistic_article"
+_table_content_relation_article_tag = "content_relation_article_tag"
+_table_content_relation_article_account = "content_relation_article_account_201701"
 
 
 class ContentChannel(db.Model):
-    __tablename__ = _table_content_channel_
+    __tablename__ = _table_content_channel_.lower()
     id = db.Column('ID', db.String(32), primary_key=True)
     channel_id = db.Column('ChannelID', db.String(32), nullable=False, unique=True, index=True)
     channel_title = db.Column('ChannelTitle', db.String(50), nullable=False, )
@@ -43,7 +43,7 @@ class ContentChannel(db.Model):
 
 
 class ContentTag(db.Model):
-    __tablename__ = _table_content_tag_
+    __tablename__ = _table_content_tag_.lower()
     id = db.Column('TagID', db.String(32), primary_key=True)
     tag_title = db.Column('TagTitle', db.String(50))
     tag_desc = db.Column('Desc', db.String(255))
@@ -69,7 +69,7 @@ class ContentTag(db.Model):
 
 # 01-12 ?
 class ContentArticle(db.Model):
-    __tablename__ = _table_content_article_
+    __tablename__ = _table_content_article_.lower()
     id = db.Column('ArticleID', db.String(32), primary_key=True)
     cover_id = db.Column('CoverID', db.String(50))
     title = db.Column('Title', db.String(50), nullable=False)
@@ -108,7 +108,7 @@ class ContentArticle(db.Model):
 
 
 class ContentDictionary(db.Model):
-    __tablename__ = _table_content_dictionary_de
+    __tablename__ = _table_content_dictionary_de.lower()
     id = db.Column(db.Integer(), primary_key=True)
     wort = db.Column('Wort', db.String(32), nullable=False, unique=True)
     wort_sex = db.Column('WortSex', db.String(10), nullable=False, default='-', index=True)
@@ -157,7 +157,7 @@ class ContentDictionary(db.Model):
 
 # 01-12 (Article)
 class ContentComment(db.Model):
-    __tablename__ = _table_content_comment_
+    __tablename__ = _table_content_comment_.lower()
     id = db.Column('CommentID', db.String(32), primary_key=True)
     comment_desc = db.Column('CommentDesc', db.String(255), nullable=False)
     comment_like_times = db.Column('CommentLikeTimes', db.SmallInteger, nullable=False, default=0)
@@ -177,7 +177,7 @@ class ContentComment(db.Model):
 
 # 01-12 (Article)
 class ContentLike(db.Model):
-    __tablename__ = _table_content_like_
+    __tablename__ = _table_content_like_.lower()
     id = db.Column('LikeID', db.String(32), primary_key=True)
 
     create_user_id = db.Column('CreateUserID', db.String(32), nullable=False)
@@ -194,7 +194,7 @@ class ContentLike(db.Model):
 
 # 01-12 ?
 class ContentStatisticArticle(db.Model):
-    __tablename__ = _table_content_statistic_article
+    __tablename__ = _table_content_statistic_article.lower()
     id = db.Column('ArticleID', db.String(32), primary_key=True)
     like_times = db.Column('LikeTimes', db.SmallInteger, nullable=False, default=0)
     comment_times = db.Column('CommentTimes', db.SmallInteger, nullable=False, default=0)
@@ -209,7 +209,7 @@ class ContentStatisticArticle(db.Model):
 
 
 content_relation_tag = db.Table(
-    _table_content_relation_article_tag,
+    _table_content_relation_article_tag.lower(),
     db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'), primary_key=True),
     db.Column('TagID', db.String(32), db.ForeignKey('Content_Tag.TagID'), primary_key=True),
     db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now()),
@@ -219,7 +219,7 @@ content_relation_tag = db.Table(
 )
 
 content_relation_account = db.Table(
-    _table_content_relation_article_account,
+    _table_content_relation_article_account.lower(),
     db.Column('ArticleID', db.String(32), db.ForeignKey('Content_Article.ArticleID'), primary_key=True),
     db.Column('UserID', db.String(32), primary_key=True),
     db.Column('Like', db.SmallInteger, nullable=False, default=0),
