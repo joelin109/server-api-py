@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, redirect, url_for, flash, g
 from flask_login import LoginManager, login_user, logout_user
 from flask_principal import Principal, Permission, RoleNeed
-from webapp.server.model.model_account import User
+from webapp.service.model.model_account import User
 
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField

@@ -3,8 +3,8 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
 import os
 
-from webapp.server.model.model_content import db, ContentArticle, ContentDictionary, ContentChannel
-from webapp.server.model.model_account import User
+from webapp.service.model.model_content import db, ContentArticle, ContentDictionary, ContentChannel
+from webapp.service.model.model_account import User
 from webapp.uicontroller.custom_form import CKTextAreaField
 
 _admin = Admin()

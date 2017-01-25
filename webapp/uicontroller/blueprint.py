@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, request
-from webapp.server.logic.user_handler import user_details
-from webapp.server.logic.dictionary_handler import DictionaryHandler, WordFilter
+from webapp.service.logic.user_handler import user_details
+from webapp.service.logic.dictionary_handler import DictionaryHandler, WordFilter
 import re
 from flask_login import login_required
 

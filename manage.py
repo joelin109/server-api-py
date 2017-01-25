@@ -1,5 +1,5 @@
 from flask_script import Manager, Server
-from webapp.server.model.db_connection import db
+from webapp.service.model.db_connection import db
 
 from webapp.main import app
 

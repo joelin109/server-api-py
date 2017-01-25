@@ -1,7 +1,7 @@
 from flask import Flask
 from webapp.conf.config import BasicConfig
-from webapp.server.api.api_source import *
-from webapp.server.model.db_connection import *
+from webapp.service.api.api_source import *
+from webapp.service.model.db_connection import *
 
 from webapp.uicontroller.blueprint import register_blueprint
 from webapp.uicontroller.extension_admin import register_admin
