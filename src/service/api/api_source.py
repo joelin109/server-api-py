@@ -1,9 +1,9 @@
 from flask_restful import Api
-from webapp.service.config import APIConfig
-from webapp.service.api.user import UserApi
-from webapp.service.api.channel import ChannelApi, ChannelListApi
-from webapp.service.api.article import ArticleApi, ArticleListApi
-from webapp.service.api.wort import WortApi, WortListApi
+from src.service.config import APIConfig
+from src.service.api.user import UserApi
+from src.service.api.channel import ChannelApi, ChannelListApi
+from src.service.api.article import ArticleApi, ArticleListApi
+from src.service.api.wort import WortApi, WortListApi
 
 
 def register_api_add_resource(app):

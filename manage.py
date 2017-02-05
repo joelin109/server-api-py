@@ -1,7 +1,7 @@
 from flask_script import Manager, Server
-from webapp.service.model.db_connection import db
+from src.service.model.db_connection import db
 
-from webapp.main import app
+from src.main import app
 
 manager = Manager(app)
 manager.add_command("server", Server())

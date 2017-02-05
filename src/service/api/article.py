@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
-from webapp.service.model.model_account import User
-from webapp.service.model.model_content import db, ContentArticle
+from src.service.model.model_account import User
+from src.service.model.model_content import db, ContentArticle
 
 
 class ArticleApi(Resource):

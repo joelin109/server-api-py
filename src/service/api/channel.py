@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from webapp.service.model.model_content import db, ContentChannel
+from src.service.model.model_content import db, ContentChannel
 
 
 class ChannelApi(Resource):

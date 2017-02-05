@@ -1,4 +1,4 @@
-from webapp.service.model.model_account import User
+from src.service.model.model_account import User
 
 
 def user_details(userid):

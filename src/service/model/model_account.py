@@ -1,7 +1,7 @@
 from sqlalchemy.inspection import inspect
 from flask_login import AnonymousUserMixin
 from datetime import datetime
-from webapp.service.model.db_connection import db, custom_random_key
+from src.service.model.db_connection import db, custom_random_key
 
 
 _table_account_ = "account_profile"

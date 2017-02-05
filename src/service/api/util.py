@@ -1,6 +1,6 @@
-from webapp.service.config import SQLConfig
-from webapp.service.model.db_connection import db
-from webapp.service.model.model_content import ContentArticle
+from src.service.config import SQLConfig
+from src.service.model.db_connection import db
+from src.service.model.model_content import ContentArticle
 from sqlalchemy import func
 
 

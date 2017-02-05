@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
-from webapp.service.config import SQLConfig
+from src.service.config import SQLConfig
 
 from datetime import datetime
 from base64 import b64encode

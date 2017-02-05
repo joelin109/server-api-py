@@ -1,6 +1,6 @@
 from sqlalchemy.inspection import inspect
 from datetime import datetime
-from webapp.service.model.db_connection import db, custom_random_key
+from src.service.model.db_connection import db, custom_random_key
 
 _table_content_channel_ = "content_channel"
 _table_content_tag_ = "content_tag"

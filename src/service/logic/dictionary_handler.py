@@ -1,5 +1,5 @@
-from webapp.service.model.model_content import db, ContentDictionary
-from webapp.service.logic.util_handler import UtilHandler
+from src.service.model.model_content import db, ContentDictionary
+from src.service.logic.util_handler import UtilHandler
 from datetime import datetime
 from sqlalchemy.sql.expression import or_
 

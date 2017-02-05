@@ -1,11 +1,11 @@
 from flask import Flask
-from webapp.conf.config import BasicConfig
-from webapp.service.api.api_source import *
-from webapp.service.model.db_connection import *
+from src.conf.config import BasicConfig
+from src.service.api.api_source import *
+from src.service.model.db_connection import *
 
-from webapp.uicontroller.blueprint import register_blueprint
-from webapp.uicontroller.extension_admin import register_admin
-from webapp.uicontroller.extension_login import register_login
+from src.uicontroller.blueprint import register_blueprint
+from src.uicontroller.extension_admin import register_admin
+from src.uicontroller.extension_login import register_login
 import asyncio
 
 

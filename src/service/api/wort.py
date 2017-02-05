@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
-from webapp.service.config import APIConfig
-from webapp.service.model.model_content import db, ContentDictionary
-from webapp.service.api.util import api_result
-from webapp.service.logic.dictionary_handler import DictionaryHandler
+from src.service.config import APIConfig
+from src.service.model.model_content import db, ContentDictionary
+from src.service.api.util import api_result
+from src.service.logic.dictionary_handler import DictionaryHandler
 import asyncio
 import selectors
 
