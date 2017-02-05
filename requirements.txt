@@ -13,5 +13,9 @@ PyMySQL==0.7.9
 psycopg2==2.6.2
 gunicorn==19.6.0
 
+Celery==4.0.2
+Flask-Celery-Helper==1.1.0
+
+
 
 
