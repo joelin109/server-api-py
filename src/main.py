@@ -3,9 +3,9 @@ from src.conf.config import BasicConfig
 from src.service.api.api_source import *
 from src.service.model.db_connection import *
 
-from src.uicontroller.blueprint import register_blueprint
-from src.uicontroller.extension_admin import register_admin
-from src.uicontroller.extension_login import register_login
+from src.webhttp.blueprint import register_blueprint
+from src.webhttp.extension_admin import register_admin
+from src.webhttp.extension_login import register_login
 import asyncio
 
 
