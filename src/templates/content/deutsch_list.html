@@ -1,0 +1,26 @@
+{% for word in words %}
+    <div class='col-md-4 col-sm-4'>
+        <div class="panel panel-default small-card2">
+
+            <div class="panel-heading"><h4>{{ word.word }}</h4></div>
+            <div>
+                <ol><a href="#"><i class="glyphicon glyphicon-volume-down" style="color:#00797e;"> </i> </a>
+                    <a href="#"><i class="glyphicon glyphicon-star-empty" style="color:#00797e;"> </i> </a>
+                    <a href="#"><i class="glyphicon glyphicon-thumbs-up" style="color:#ff7277;"> </i> </a>
+                    <a href="#"><i class="glyphicon glyphicon-thumbs-down" style="color:#00797e;"> </i> </a>
+                    <li>{{ word.type | truncate(500) | safe }} - {{ word.sex }}</li>
+
+
+                    <li><a>{{ word.plural }}</a></li>
+                    <li><a>A1/A2</a></li>
+                    <li><a>{{ word.word_ch }} </a></li>
+                    <li><a> {{ word.word_en }}</a></li>
+
+
+                </ol>
+            </div>
+
+
+        </div>
+    </div>
+{% endfor %}
