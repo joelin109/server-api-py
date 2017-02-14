@@ -2,24 +2,30 @@ from src.service.model.model_content import db, ContentDictionary
 from src.service.logic.util_handler import UtilHandler
 from datetime import datetime
 from sqlalchemy.sql.expression import or_
+from src.service.util.logger import *
+import traceback
 
 
 class DictionaryHandler(UtilHandler):
     def word_list(self, word_filter=None):
         # .filter_by(is_regel=0)
-        if word_filter is None:
-            _wordPage = ContentDictionary.query.order_by(
-                ContentDictionary.wort.asc()
-            ).paginate(1, 80, False)
+        try:
+            if word_filter is None:
+                _wordPage = ContentDictionary.query.order_by(
+                    ContentDictionary.wort.asc()
+                ).paginate(1, 80, False)
 
-        else:
-            # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
-            _wordPage = ContentDictionary.query.filter(
-                or_(ContentDictionary.wort.startswith(word_filter.word_channel.lower()),
-                    ContentDictionary.wort.startswith(word_filter.word_channel.upper()))
-            ).order_by(
-                ContentDictionary.wort.asc()
-            ).paginate(1, 80, False)
+            else:
+                # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
+                _wordPage = ContentDictionary.query.filter(
+                    or_(ContentDictionary.wort.startswith(word_filter.word_channel.lower()),
+                        ContentDictionary.wort.startswith(word_filter.word_channel.upper()))
+                ).order_by(
+                    ContentDictionary.wort.asc()
+                ).paginate(1, 80, False)
+
+        except Exception as ex:
+            raise RuntimeError(ex)
 
         return self.result_page(_wordPage)
 

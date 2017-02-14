@@ -3,6 +3,7 @@ from src.service.logic.user_handler import user_details
 from src.service.logic.dictionary_handler import DictionaryHandler, WordFilter
 import re
 from flask_login import login_required
+from src.service.util.logger import *
 
 home_blueprint = Blueprint('home', __name__)
 content_blueprint = Blueprint('content', __name__)
@@ -78,7 +79,11 @@ def deutsch(channel=None):
         _word_filter.parse(_filters)
 
     _handler = DictionaryHandler()
-    _word_list, _page = _handler.word_list(_word_filter)
+    try:
+        _word_list, _page = _handler.word_list(_word_filter)
+    except Exception as ex:
+        log_traceback(ex)
+
     return render_template(
         'content/deutsch.html',
         words=_word_list,

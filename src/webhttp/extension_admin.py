@@ -5,7 +5,7 @@ import os
 
 from src.service.model.model_content import db, ContentArticle, ContentDictionary, ContentChannel
 from src.service.model.model_account import User
-from src.webhttp.custom_form import CKTextAreaField
+from src.webhttp.form_admin_article import CKTextAreaField
 
 _admin = Admin()
 
