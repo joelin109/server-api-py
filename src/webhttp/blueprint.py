@@ -107,6 +107,10 @@ def admin(page=1):
 
 # Public Register def
 def register_blueprint(app):
+    @app.route('/react')
+    def test():
+        return render_template('react/index.html')
+
     @app.route('/')
     def index():
         url = url_for('content.deutsch')  # content_blueprint - home(def)
