@@ -2,10 +2,8 @@ from flask import Flask
 from src.www_setting import WwwConfig
 from src.service.api.api_source import *
 from src.service.model.db_connection import *
+from src.webhttp.extension import register_extension
 
-from src.webhttp.blueprint import register_blueprint
-from src.webhttp.extension_admin import register_admin
-from src.webhttp.extension_login import register_login
 import asyncio
 
 
@@ -19,9 +17,7 @@ def create_app(object_name):
 
     register_api_add_resource(_app)
     register_db_connection(_app)
-    register_blueprint(_app)
-    register_admin(_app)
-    register_login(_app)
+    register_extension(_app)
 
     return _app
 
