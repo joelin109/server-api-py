@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, request
-from src.service.logic.user_handler import user_details
-from src.service.logic.dictionary_handler import DictionaryHandler, WordFilter
+from src.service.logic.user_logic import user_details
+from src.service.logic.dictionary_logic import DictionaryLogic, WordFilter
 import re
 from flask_login import login_required
 from src.service.util.logger import *
@@ -78,9 +78,9 @@ def deutsch(channel=None):
         _word_filter = WordFilter()
         _word_filter.parse(_filters)
 
-    _handler = DictionaryHandler()
+    _logic = DictionaryLogic()
     try:
-        _word_list, _page = _handler.word_list(_word_filter)
+        _word_list, _page = _logic.get_list(_word_filter)
     except Exception as ex:
         log_traceback(ex)
 

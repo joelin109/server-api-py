@@ -1,13 +1,13 @@
 from src.service.model.model_content import db, ContentDictionary
-from src.service.logic.util_handler import UtilHandler
+from src.service.logic.util_logic import UtilLogic
 from datetime import datetime
 from sqlalchemy.sql.expression import or_
 from src.service.util.logger import *
 import traceback
 
 
-class DictionaryHandler(UtilHandler):
-    def word_list(self, word_filter=None):
+class DictionaryLogic(UtilLogic):
+    def get_list(self, word_filter=None):
         # .filter_by(is_regel=0)
         try:
             if word_filter is None:
@@ -29,7 +29,7 @@ class DictionaryHandler(UtilHandler):
 
         return self.result_page(_wordPage)
 
-    def word_update(self, new_wort):
+    def update_word(self, new_wort):
         self._verify_except_case()
 
         ContentDictionary.query.filter_by(id=new_wort.id).update({
@@ -48,14 +48,14 @@ class DictionaryHandler(UtilHandler):
         db.session.commit()
         return True
 
-    def word_new(self, new_wort):
+    def post_new(self, new_wort):
         self._verify_except_case()
 
         db.session.add(new_wort)
         db.session.commit()
         return True
 
-    def word_detail(self, word_id):
+    def get_detail(self, word_id):
         self._verify_except_case()
 
         _word = ContentDictionary.query.filter_by(wort=word_id).first()

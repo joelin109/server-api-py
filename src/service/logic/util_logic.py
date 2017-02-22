@@ -1,4 +1,4 @@
-class UtilHandler:
+class UtilLogic:
     def result_page(self, result_page=None):
         self._verify_except_case()
 

@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.model.model_content import db, ContentDictionary
 from src.service.api.util import api_response_format
-from src.service.logic.dictionary_handler import DictionaryHandler
+from src.service.logic.dictionary_logic import DictionaryLogic
 import asyncio
 import selectors
 
@@ -33,26 +33,26 @@ class WortListApi(Resource):
         pass
 
     def post(self):
-        _handler = DictionaryHandler()
+        _handler = DictionaryLogic()
         _result_list, _page = _handler.word_list()
         return api_response_format(_result_list, _page)
 
 
 async def _response_result(_post_wort):
-    _handler = DictionaryHandler()
-    _word = _handler.word_detail(_post_wort.wort)
+    _logic = DictionaryLogic()
+    _word = _logic.get_detail(_post_wort.wort)
     if _word is None:
-        _handler.word_new(_post_wort)
+        _logic.post_new(_post_wort)
     else:
         _post_wort.id = _word.id
-        _handler.word_update(_post_wort)
+        _logic.update_word(_post_wort)
 
     if reqparse.request.path == Conf.APIURL_Content_Dictionary_Remove:
         db.session.delete(_word.first())
         db.session.commit()
 
     #await asyncio.sleep(2)
-    _list, _page = _handler.word_list("")
+    _list, _page = _logic.word_list("")
     return api_response_format(_list, _page)
 
 
