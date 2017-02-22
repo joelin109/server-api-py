@@ -13,7 +13,7 @@ class SQLConfig(object):
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL
 
 
-class APIConfig(object):
+class Conf(object):
     DEBUG = True
     APIURL_USER_List = '/api/user/list'
     APIURL_USER_Detail = '/api/user/detail'

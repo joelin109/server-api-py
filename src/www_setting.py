@@ -1,4 +1,4 @@
-class BasicConfig(object):
+class WwwConfig(object):
     DEBUG = True
     Host_URL = '127.0.0.1'
     Host_Port = 1058

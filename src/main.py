@@ -1,5 +1,5 @@
 from flask import Flask
-from src.conf.config import BasicConfig
+from src.www_setting import WwwConfig
 from src.service.api.api_source import *
 from src.service.model.db_connection import *
 
@@ -26,9 +26,9 @@ def create_app(object_name):
     return _app
 
 
-app = create_app(BasicConfig)
+app = create_app(WwwConfig)
 if __name__ == '__main__':
-    app.run(host=BasicConfig.Host_URL, port=BasicConfig.Host_Port)
+    app.run(host=WwwConfig.Host_URL, port=WwwConfig.Host_Port)
 
 """
 async def async_foo():

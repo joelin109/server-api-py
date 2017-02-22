@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from src.service.config import APIConfig
+from src.service.config import Conf
 from src.service.model.model_content import db, ContentDictionary
 from src.service.api.util import api_result
 from src.service.logic.dictionary_handler import DictionaryHandler
@@ -45,7 +45,7 @@ async def _response_result(_post_wort):
         _post_wort.id = _word.id
         _handler.word_update(_post_wort)
 
-    if reqparse.request.path == APIConfig.APIURL_Content_Dictionary_Remove:
+    if reqparse.request.path == Conf.APIURL_Content_Dictionary_Remove:
         db.session.delete(_word.first())
         db.session.commit()
 

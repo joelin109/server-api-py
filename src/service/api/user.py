@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from src.service.config import APIConfig
+from src.service.config import Conf
 from src.service.model.model_account import db, User
 from src.service.api.util import api_result
 
@@ -38,7 +38,7 @@ class UserApi(Resource):
         else:
             print(_user.count())
 
-        if reqparse.request.path == APIConfig.APIURL_USER_Remove:
+        if reqparse.request.path == Conf.APIURL_USER_Remove:
             db.session.delete(_user.first())
             db.session.commit()
 
