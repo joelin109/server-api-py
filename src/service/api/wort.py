@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.model.model_content import db, ContentDictionary
-from src.service.api.util import api_result
+from src.service.api.util import api_response_format
 from src.service.logic.dictionary_handler import DictionaryHandler
 import asyncio
 import selectors
@@ -33,7 +33,9 @@ class WortListApi(Resource):
         pass
 
     def post(self):
-        pass
+        _handler = DictionaryHandler()
+        _result_list, _page = _handler.word_list()
+        return api_response_format(_result_list, _page)
 
 
 async def _response_result(_post_wort):
@@ -50,9 +52,8 @@ async def _response_result(_post_wort):
         db.session.commit()
 
     #await asyncio.sleep(2)
-
     _list, _page = _handler.word_list("")
-    return api_result(_list, _page)
+    return api_response_format(_list, _page)
 
 
 def _parse_request_data(request_data):

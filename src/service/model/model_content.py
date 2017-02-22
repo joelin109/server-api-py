@@ -138,8 +138,10 @@ class ContentDictionary(db.Model):
             "type": self.type,
             "sex": self.wort_sex,
             "plural": self.plural,
-            "word_ch": self.wort_zh,
-            "word_en": self.wort_en,
+            "ch": self.wort_zh,
+            "en": self.wort_en,
+            "is_regel": self.is_regel,
+            "is_recommend": self.is_recommend
         }
         return result_row
 

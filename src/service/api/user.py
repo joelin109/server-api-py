@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.model.model_account import db, User
-from src.service.api.util import api_result
+from src.service.api.util import api_response_format
 
 
 class UserApi(Resource):
@@ -44,4 +44,4 @@ class UserApi(Resource):
 
         _userPage = User.query.order_by(User.id.desc()).paginate(1, 15, False)
         print(type(_userPage.items))
-        return api_result(_userPage)
+        return api_response_format(_userPage)

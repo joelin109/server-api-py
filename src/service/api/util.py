@@ -5,7 +5,7 @@ from sqlalchemy import func
 
 
 # @staticmethod
-def api_result(result_list=None, page=None):
+def api_response_format(result_list=None, page=None):
     try:
 
         _results = {
