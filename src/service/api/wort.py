@@ -33,8 +33,8 @@ class WortListApi(Resource):
         pass
 
     def post(self):
-        _handler = DictionaryLogic()
-        _result_list, _page = _handler.word_list()
+        _logic = DictionaryLogic()
+        _result_list, _page = _logic.get_list()
         return api_response_format(_result_list, _page)
 
 
@@ -42,7 +42,7 @@ async def _response_result(_post_wort):
     _logic = DictionaryLogic()
     _word = _logic.get_detail(_post_wort.wort)
     if _word is None:
-        _logic.post_new(_post_wort)
+        _logic.new(_post_wort)
     else:
         _post_wort.id = _word.id
         _logic.update_word(_post_wort)
