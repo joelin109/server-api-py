@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, request
 from src.service.logic.user_logic import user_details
-from src.service.logic.dictionary_logic import DictionaryLogic, WordFilter
+from src.service.logic.dictionary_logic import DictionaryLogic, WordListFilter
 import re
 from flask_login import login_required
 from src.service.util.logger import *
@@ -74,8 +74,8 @@ def deutsch(channel=None):
         print(channel)
 
     if channel is not None:
-        _filters = {'channel': channel, 'sape': 4139}
-        _word_filter = WordFilter()
+        _filters = {'letter': channel, 'sape': 4139, 'page': 1}
+        _word_filter = WordListFilter()
         _word_filter.parse(_filters)
 
     _logic = DictionaryLogic()

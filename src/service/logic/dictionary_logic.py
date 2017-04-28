@@ -34,17 +34,19 @@ class DictionaryLogic(UtilLogic):
         db.session.commit()
         return True
 
-    def get_list(self, word_filter=None):
+    def get_list(self, list_filter=None):
         # .filter_by(is_regel=0)
         try:
-            _filter = ''
-            if word_filter is None:
-                _filter = "1=1 ORDER BY lower(wort)"
-            else:
+            _filterStr = "1=1 ORDER BY lower(wort)"
+            _page = 1
+            if list_filter is not None:
                 # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
-                _filter = "lower(SUBSTRING(wort, 1, 1)) = '%s' ORDER BY lower(wort)" % word_filter.word_channel.lower()
+                _letter = list_filter.word_letter.lower()
+                _page = list_filter.page
+                if _letter != '':
+                    _filterStr = "lower(SUBSTRING(wort, 1, 1)) = '%s' ORDER BY lower(wort)" % _letter
 
-            _wordPage = ContentDictionary.query.filter(_filter).paginate(1, 200, False)
+            _wordPage = ContentDictionary.query.filter(_filterStr).paginate(_page, 200, False)
 
         except Exception as ex:
             raise RuntimeError(ex)
@@ -58,11 +60,11 @@ class DictionaryLogic(UtilLogic):
         return _word
 
 
-class WordFilter:
+class WordListFilter:
     page = 1
     is_recommend = -1
     is_regel = -1
-    word_channel = ""
+    word_letter = ""
     word_sex = ""
     word_type = ""
 
@@ -70,4 +72,5 @@ class WordFilter:
         self.is_recommend = 1
         # self.word_type = filters["type"]
         # self.word_sex = filters["sex"]
-        self.word_channel = filters["channel"]
+        self.word_letter = filters["letter"]
+        self.page = filters["page"]
