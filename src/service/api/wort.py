@@ -52,7 +52,7 @@ async def _response_result(_post_wort):
         db.session.commit()
 
     #await asyncio.sleep(2)
-    _list, _page = _logic.word_list("")
+    _list, _page = _logic.get_list()
     return api_response_format(_list, _page)
 
 

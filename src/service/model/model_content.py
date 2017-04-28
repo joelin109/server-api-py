@@ -122,6 +122,7 @@ class ContentDictionary(db.Model):
     is_regel = db.Column('is_regel', db.SmallInteger, nullable=False, default=1, index=True)
     is_recommend = db.Column('is_recommend', db.SmallInteger, nullable=False, default=0, index=True)
     is_ignore = db.Column('is_ignore', db.SmallInteger, nullable=False, default=0)
+    status = db.Column('status', db.SmallInteger, nullable=False, default=0)
     create_date = db.Column('create_date', db.DateTime(), nullable=False,
                             default=datetime.now())
     update_date = db.Column('update_date', db.DateTime(), nullable=False,
@@ -134,14 +135,18 @@ class ContentDictionary(db.Model):
 
     def parse(self):
         result_row = {
-            "word": self.wort,
-            "type": self.type,
-            "sex": self.wort_sex,
+            "id": self.id,
+            "wort": self.wort,
+            "wort_sex": self.wort_sex,
             "plural": self.plural,
-            "ch": self.wort_zh,
+            "zh": self.wort_zh,
             "en": self.wort_en,
+            "level": self.level,
+            "type": self.type,
             "is_regel": self.is_regel,
-            "is_recommend": self.is_recommend
+            "is_recommend": self.is_recommend,
+            "status": self.status,
+            "createdate": self.update_date.strftime('%Y-%m-%d %H:%M:%S')
         }
         return result_row
 

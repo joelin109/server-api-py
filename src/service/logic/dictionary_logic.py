@@ -2,6 +2,7 @@ from src.service.model.model_content import db, ContentDictionary
 from src.service.logic.util_logic import UtilLogic
 from datetime import datetime
 from sqlalchemy.sql.expression import or_
+from sqlalchemy import desc
 from src.service.util.logger import *
 import traceback
 
@@ -37,9 +38,9 @@ class DictionaryLogic(UtilLogic):
         # .filter_by(is_regel=0)
         try:
             if word_filter is None:
-                _wordPage = ContentDictionary.query.order_by(
-                    ContentDictionary.wort.asc()
-                ).paginate(1, 80, False)
+                _wordPage = ContentDictionary.query.filter(
+                    '1=1 ORDER BY lower(wort)'
+                ).paginate(1, 200, False)
 
             else:
                 # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")

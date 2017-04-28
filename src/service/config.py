@@ -26,6 +26,7 @@ class Conf(object):
     APIURL_Content_Article_Detail = '/api/content/article/detail'
     APIURL_Content_Article_Post = '/api/content/article/post'
     APIURL_Content_Article_Remove = '/api/content/article/remove'
+    APIURL_Content_Article_Status_Update = '/api/content/article/status_update'
     APIURL_Content_Dictionary_List = '/api/content/dictionary/list'
     APIURL_Content_Dictionary_Detail = '/api/content/dictionary/detail'
     APIURL_Content_Dictionary_Post = '/api/content/dictionary/post'
