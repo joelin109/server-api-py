@@ -37,19 +37,14 @@ class DictionaryLogic(UtilLogic):
     def get_list(self, word_filter=None):
         # .filter_by(is_regel=0)
         try:
+            _filter = ''
             if word_filter is None:
-                _wordPage = ContentDictionary.query.filter(
-                    '1=1 ORDER BY lower(wort)'
-                ).paginate(1, 200, False)
-
+                _filter = "1=1 ORDER BY lower(wort)"
             else:
                 # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
-                _wordPage = ContentDictionary.query.filter(
-                    or_(ContentDictionary.wort.startswith(word_filter.word_channel.lower()),
-                        ContentDictionary.wort.startswith(word_filter.word_channel.upper()))
-                ).order_by(
-                    ContentDictionary.wort.asc()
-                ).paginate(1, 80, False)
+                _filter = "lower(SUBSTRING(wort, 1, 1)) = '%s' ORDER BY lower(wort)" % word_filter.word_channel.lower()
+
+            _wordPage = ContentDictionary.query.filter(_filter).paginate(1, 200, False)
 
         except Exception as ex:
             raise RuntimeError(ex)
