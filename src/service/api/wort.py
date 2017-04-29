@@ -14,8 +14,9 @@ class WortApi(Resource):
         print(reqparse.request.url)
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()
+        _request_data = api_request_parse(_parser)
 
-        _post_wort = _get_request_data(_parser)
+        _post_wort = _get_request_data(_request_data)
         _result = _response_result(_post_wort)
         return _result
 
@@ -25,9 +26,9 @@ class WortListApi(Resource):
         pass
 
     def post(self):
-        _parser = reqparse.RequestParser()
+        _request_data = api_request_parse()
 
-        _list_filter = _get_request_data_filter(_parser)
+        _list_filter = _get_request_data_filter(_request_data)
         _logic = DictionaryLogic()
         _result_list, _page = _logic.get_list(_list_filter)
         return api_response_format(_result_list, _page)
@@ -52,18 +53,7 @@ def _response_result(_post_wort):
     return api_response_format(_list, _page)
 
 
-def _parse_request_data(parser):
-    parser.add_argument('token', type=str, location='json')
-    parser.add_argument('data', location='json')
-    args = parser.parse_args()
-    _token = args['token']
-    _data = eval(args['data'])
-    return _data
-
-
-def _get_request_data(request_parser):
-    request_data = _parse_request_data(request_parser)
-
+def _get_request_data(request_data):
     new_word = ContentDictionary('')
     new_word.wort = request_data["Word"]
     new_word.wort_sex = request_data["Sex"]
@@ -81,9 +71,7 @@ def _get_request_data(request_parser):
     return new_word
 
 
-def _get_request_data_filter(request_parser):
-    request_data = _parse_request_data(request_parser)
-
+def _get_request_data_filter(request_data):
     if 'filter' in request_data:
         _request_data_filter = request_data["filter"]
         _list_filter = WordListFilter()

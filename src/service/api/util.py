@@ -2,31 +2,20 @@ from src.service.config import SQLConfig
 from src.service.model.db_connection import db
 from src.service.model.model_content import ContentArticle
 from sqlalchemy import func
+from flask_restful import reqparse
 
 
 # @staticmethod
-def api_request_parse(result_list=None, page=None):
-    try:
+def api_request_parse(parser=None):
+    if parser is None:
+        parser = reqparse.RequestParser()
 
-        _results = {
-            "page": page,
-            "rows": result_list
-        }
-        _response = {
-            "code": 1,
-            "desc": "success",
-            "resource": SQLConfig.SQLALCHEMY_DATABASE_URI.split(":")[0],
-            "result": _results
-        }
-        return _response
-
-    except IOError as error:
-        return {"error": "I/O error: {0}".format(error)}
-    except:
-        return {"error": "........"}
-        raise
-    finally:
-        print('finally')
+    parser.add_argument('token', type=str, location='json')
+    parser.add_argument('data', location='json')
+    _args = parser.parse_args()
+    _token = _args['token']
+    _data = eval(_args['data'])
+    return _data
 
 
 # @staticmethod

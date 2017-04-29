@@ -34,19 +34,15 @@ class DictionaryLogic(UtilLogic):
         db.session.commit()
         return True
 
+    # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
     def get_list(self, list_filter=None):
-        # .filter_by(is_regel=0)
         try:
-            _filterStr = "1=1 ORDER BY lower(wort)"
-            _page = 1
-            if list_filter is not None:
-                # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
-                _letter = list_filter.word_letter.lower()
-                _page = list_filter.page
-                if _letter != '':
-                    _filterStr = "lower(SUBSTRING(wort, 1, 1)) = '%s' ORDER BY lower(wort)" % _letter
+            if list_filter is None:
+                list_filter = WordListFilter()
 
-            _listResult = ContentDictionary.query.filter(_filterStr).paginate(_page, 200, False)
+            _filter_sql = list_filter.filter_sql + " ORDER BY lower(wort)"
+            _listResult = ContentDictionary.query.filter(_filter_sql) \
+                .paginate(list_filter.page_num, list_filter.page_size, False)
 
         except Exception as ex:
             raise RuntimeError(ex)
@@ -61,18 +57,24 @@ class DictionaryLogic(UtilLogic):
 
 
 class WordListFilter:
-    page = 1
+    page_num = 1
+    page_size = 100
+    publish_status = 1
     is_recommend = 0
     is_regel = -1
     word_letter = ""
     word_sex = ""
     word_type = ""
+    filter_sql = "1=1"
 
     def parse(self, data_filter=None):
-        if 'page' in data_filter:
-            self.page = data_filter['page']
+        self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
 
+        if 'page_size' in data_filter:
+            self.page_size = data_filter['page_size']
         if 'is_recommend' in data_filter:
             self.is_recommend = data_filter["is_recommend"]
-
         self.word_letter = data_filter["letter"]
+
+        _filter_letter = "lower(SUBSTRING(wort, 1, 1)) = '%s' " % self.word_letter.lower()
+        self.filter_sql = "1=1" if self.word_letter == '' else _filter_letter
