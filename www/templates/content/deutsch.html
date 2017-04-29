@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block base_body_fill %}
+
+    <div class="navbar-default" id="subnav" style="background-color:#3f3f3f; min-height: 40px; vertical-align: bottom">
+        <h4 class="motto" style="padding-top: 8px;">Welcome to Deutsch Channel</h4>
+    </div>
+
+
+    <div class="container" id="main" style="font-family: 'Circular'">
+        <div class="row">
+
+            {% include "content/deutsch_list.html" %}
+        </div>
+
+    </div>
+
+{% endblock %}
