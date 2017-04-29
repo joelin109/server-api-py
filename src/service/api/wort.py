@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.model.model_content import db, ContentDictionary
-from src.service.api.util import api_response_format
+from src.service.api.util import api_response_format, api_request_parse
 from src.service.logic.dictionary_logic import DictionaryLogic, WordListFilter
 import asyncio
 import selectors
@@ -16,8 +16,7 @@ class WortApi(Resource):
         _parser = reqparse.RequestParser()
 
         _post_wort = _get_request_data(_parser)
-        _result = loop.run_until_complete(_response_result(_post_wort))
-        # loop.close()
+        _result = _response_result(_post_wort)
         return _result
 
 
@@ -34,7 +33,7 @@ class WortListApi(Resource):
         return api_response_format(_result_list, _page)
 
 
-async def _response_result(_post_wort):
+def _response_result(_post_wort):
     _logic = DictionaryLogic()
     _word = _logic.get_detail(_post_wort.wort)
 
@@ -85,15 +84,11 @@ def _get_request_data(request_parser):
 def _get_request_data_filter(request_parser):
     request_data = _parse_request_data(request_parser)
 
-    _request_data_filter = request_data["filter"]
-    print(_request_data_filter)
-
-    if _request_data_filter is None:
-        print('_request_data_filter')
-        return None
-    else:
-        print('_request_data_filter2')
+    if 'filter' in request_data:
+        _request_data_filter = request_data["filter"]
         _list_filter = WordListFilter()
         _list_filter.parse(_request_data_filter)
-
         return _list_filter
+
+    else:
+        return None

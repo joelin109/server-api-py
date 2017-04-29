@@ -46,12 +46,12 @@ class DictionaryLogic(UtilLogic):
                 if _letter != '':
                     _filterStr = "lower(SUBSTRING(wort, 1, 1)) = '%s' ORDER BY lower(wort)" % _letter
 
-            _wordPage = ContentDictionary.query.filter(_filterStr).paginate(_page, 200, False)
+            _listResult = ContentDictionary.query.filter(_filterStr).paginate(_page, 200, False)
 
         except Exception as ex:
             raise RuntimeError(ex)
 
-        return self.result_page(_wordPage)
+        return self.result_page(_listResult)
 
     def get_detail(self, word_id):
         self._verify_except_case()
@@ -62,15 +62,17 @@ class DictionaryLogic(UtilLogic):
 
 class WordListFilter:
     page = 1
-    is_recommend = -1
+    is_recommend = 0
     is_regel = -1
     word_letter = ""
     word_sex = ""
     word_type = ""
 
-    def parse(self, filters=None):
-        self.is_recommend = 1
-        # self.word_type = filters["type"]
-        # self.word_sex = filters["sex"]
-        self.word_letter = filters["letter"]
-        self.page = filters["page"]
+    def parse(self, data_filter=None):
+        if 'page' in data_filter:
+            self.page = data_filter['page']
+
+        if 'is_recommend' in data_filter:
+            self.is_recommend = data_filter["is_recommend"]
+
+        self.word_letter = data_filter["letter"]
