@@ -76,5 +76,5 @@ class WordListFilter:
             self.is_recommend = data_filter["is_recommend"]
         self.word_letter = data_filter["letter"]
 
-        _filter_letter = "lower(SUBSTRING(wort, 1, 1)) = '%s' " % self.word_letter.lower()
-        self.filter_sql = "1=1" if self.word_letter == '' else _filter_letter
+        _filter_letter = 'lower(SUBSTRING(wort, 1, 1)) = \'%s\' ' % self.word_letter.lower()
+        self.filter_sql = '1=1' if self.word_letter == '' else _filter_letter

@@ -40,7 +40,7 @@ def api_response_format(result_list=None, page=None):
         return {"error": "........"}
         raise
     finally:
-        print('finally')
+        print('api_response_format - finally')
 
 
 def sidebar_data():

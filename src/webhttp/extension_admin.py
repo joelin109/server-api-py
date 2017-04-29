@@ -49,6 +49,8 @@ class LogOut(BaseView):
 # Public Register def
 def register_admin(app):
     _admin.init_app(app)
+    _static_path = os.path.join(os.path.dirname(__file__), '../../www/static')
+    print(_static_path)
 
     _admin.add_view(CustomView(name='CustomJ'))
     _admin.add_view(
@@ -72,10 +74,6 @@ def register_admin(app):
         )
     )
     _admin.add_view(
-        CustomFileAdmin(
-            os.path.join(os.path.dirname(__file__), '../static'),
-            '/static/',
-            name='Static Files'
-        )
+        CustomFileAdmin(_static_path, '/static/', name='Static Files')
     )
     _admin.add_view(LogOut(name='LogOut'))

@@ -4,6 +4,7 @@ from src.service.logic.dictionary_logic import DictionaryLogic, WordListFilter
 import re
 from flask_login import login_required
 from src.service.util.logger import *
+import jinja2
 
 home_blueprint = Blueprint('home', __name__)
 content_blueprint = Blueprint('content', __name__)
@@ -123,6 +124,7 @@ def register_blueprint(app):
 
     register_add_url_rule(app)
     register_error_handlers(app)
+    register_templates_and_static(app)
 
 
 def register_error_handlers(app):
@@ -143,3 +145,11 @@ def register_add_url_rule(app):
     @app.route('/post/<int:post_id>', methods=('GET', 'POST'))
     def post(post_id):
         return {"": "gfdgdfg"}
+
+
+def register_templates_and_static(app):
+    _template_path = jinja2.ChoiceLoader([
+        app.jinja_loader,
+        jinja2.FileSystemLoader('www/templates'),
+    ])
+    app.jinja_loader = _template_path
