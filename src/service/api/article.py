@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.service.model.model_account import User
 from src.service.model.model_content import db, ContentArticle
+from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
 
 
 class ArticleApi(Resource):

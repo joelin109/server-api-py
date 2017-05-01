@@ -28,9 +28,9 @@ class ContentChannel(db.Model):
     create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('create_ip', db.String(50))
     create_user_id = db.Column('create_user_id', db.String(32))
-    update_date = db.Column('update_date', db.DateTime(), nullable=False, default=datetime.now())
-    update_ip = db.Column('update_ip', db.String(50))
-    update_user_id = db.Column('update_user_id', db.String(32))
+    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, default=datetime.now())
+    last_update_ip = db.Column('last_update_ip', db.String(50))
+    last_update_user_id = db.Column('last_update_user_id', db.String(32))
 
     def __init__(self):
         self.id = custom_random_key(self, "CC")
@@ -53,9 +53,9 @@ class ContentTag(db.Model):
     create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('create_ip', db.String(50))
     create_user_id = db.Column('create_user_id', db.String(32))
-    update_date = db.Column('update_date', db.DateTime())
-    update_ip = db.Column('update_ip', db.String(50))
-    update_user_id = db.Column('update_user_id', db.String(32))
+    last_update_date = db.Column('last_update_date', db.DateTime())
+    last_update_ip = db.Column('last_update_ip', db.String(50))
+    last_update_user_id = db.Column('last_update_user_id', db.String(32))
 
     def __init__(self, title):
         self.tag_title = title
@@ -71,18 +71,21 @@ class ContentTag(db.Model):
 class ContentArticle(db.Model):
     __tablename__ = _table_content_article_.lower()
     id = db.Column('article_id', db.String(32), primary_key=True)
-    cover_id = db.Column('cover_id', db.String(50))
-    title = db.Column('title', db.String(50), nullable=False)
+    cover_thumbnail_src = db.Column('cover_thumbnail_src', db.String(200))
+    cover_src = db.Column('cover_src', db.String(100))
+    title = db.Column('title', db.String(100), nullable=False, index=True)
     subtitle = db.Column('subtitle', db.String(100))
-    # 0/Text - 1/Html - 2/Jason
+    # 0 (None) - 1/Html - 2/Markdown - 3/JSon - 4/Text
     format_type = db.Column('format_type', db.SmallInteger, nullable=False, default=0)
     body_text = db.Column('body_text', db.Text())
+    body_parse_level = db.Column('body_parse_level', db.SmallInteger(), nullable=False, default=0, index=True)
     desc = db.Column('desc', db.String(255))
-    channel_id = db.Column('channel_id', db.String(32), nullable=False, index=True)
+    channel_id = db.Column('channel_id', db.String(32), index=True)
     tag_id = db.Column('tag_id', db.String(32), index=True)
-    publish_status = db.Column('publish_status', db.SmallInteger(), nullable=False, default=1)
-    original_resource = db.Column('original_resource', db.String(50))  # original resource
+    original_url = db.Column('original_url', db.String(100))  # original resource
+    original_author = db.Column('original_author', db.String(50))  # original author
 
+    is_original = db.Column('is_original', db.Boolean(), nullable=False, default=False)
     create_user_id = db.Column('create_user_id', db.String(32), nullable=False, index=True)
     create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
     create_ip = db.Column('create_ip', db.String(50))
@@ -93,18 +96,55 @@ class ContentArticle(db.Model):
     approve_date = db.Column('approve_date', db.DateTime())
     last_update_user_id = db.Column('last_update_user_id', db.String(32))
     last_update_ip = db.Column('last_update_ip', db.String(50))
-    last_update_date = db.Column('last_update_date', db.DateTime())
+    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, index=True)
     valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1, index=True)
+
+    publish_at = db.Column('publish_at', db.String(50), nullable=False, default=0, index=True)
+    publish_status = db.Column('publish_status', db.SmallInteger(), nullable=False, default=0, index=True)
+    is_recommend = db.Column('is_recommend', db.Boolean(), nullable=False, default=False, index=True)
 
     def __init__(self, title=None):
         self.id = custom_random_key(self, "CA")
+        self.create_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.title = title
 
     def __repr__(self):
         return "<Post '{}'>".format(self.title)
 
     def parse(self):
-        return serialize(self)
+        result_row = {
+            "id": self.id,
+            "cover_thumbnail_src": self.cover_thumbnail_src,
+            "cover_src": self.cover_src,
+            "title": self.title,
+            "subtitle": self.subtitle,
+            "original_url": self.original_url,
+            "desc": self.desc,
+            "format_type": self.format_type,
+            "body_parse_level": self.body_parse_level,
+            "channel_id": self.channel_id,
+            "tag_id": self.tag_id,
+            "publish_at": self.publish_at,
+            "last_update_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S'),
+            "is_recommend": self.is_recommend,
+            "publish_status": self.publish_status
+        }
+        return result_row
+
+    def parse_top(self):
+        result_row = {
+            "id": self.id,
+            "cover_thumbnail_src": self.cover_thumbnail_src,
+            "title": self.title,
+            "original_url": self.original_url,
+            "tag_id": self.tag_id,
+            "publish_at": self.publish_at,
+            "last_update_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        return result_row
+
+    def parse_publish_at(self):
+        return self.last_update_date.strftime('%Y-%m-%d %H:%M:%S')
 
 
 class ContentDictionary(db.Model):
@@ -122,11 +162,10 @@ class ContentDictionary(db.Model):
     is_regel = db.Column('is_regel', db.SmallInteger, nullable=False, default=1, index=True)
     is_recommend = db.Column('is_recommend', db.SmallInteger, nullable=False, default=0, index=True)
     is_ignore = db.Column('is_ignore', db.SmallInteger, nullable=False, default=0)
-    status = db.Column('status', db.SmallInteger, nullable=False, default=0)
     create_date = db.Column('create_date', db.DateTime(), nullable=False,
                             default=datetime.now())
-    update_date = db.Column('update_date', db.DateTime(), nullable=False,
-                            default=datetime.now())
+    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, default=datetime.now())
+    publish_status = db.Column('publish_status', db.SmallInteger(), nullable=False, default=0, index=True)
 
     def __init__(self, wort=None):
         self.wort = wort
@@ -145,8 +184,8 @@ class ContentDictionary(db.Model):
             "type": self.type,
             "is_regel": self.is_regel,
             "is_recommend": self.is_recommend,
-            "status": self.status,
-            "createdate": self.update_date.strftime('%Y-%m-%d %H:%M:%S')
+            "status": self.publish_status,
+            "create_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S')
         }
         return result_row
 

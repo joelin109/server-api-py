@@ -1,7 +1,6 @@
 from flask_script import Manager, Server
 from src.service.model.db_connection import db
-
-from src.main import app
+from main import app
 
 manager = Manager(app)
 manager.add_command("server", Server())
@@ -14,3 +13,8 @@ def make_shell_context():
 
 if __name__ == "__main__":
     manager.run()
+
+
+# Step 1: python manage.py shell
+# Step 2: db.create_all()
+

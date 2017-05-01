@@ -31,3 +31,5 @@ class Conf(object):
     APIURL_Content_Dictionary_Detail = '/api/content/dictionary/detail'
     APIURL_Content_Dictionary_Post = '/api/content/dictionary/post'
     APIURL_Content_Dictionary_Remove = '/api/content/dictionary/remove'
+    APIURL_Content_Crawler_Article = '/api/content/crawler/article'
+    APIURL_Content_Crawler_Article_Body = '/api/content/crawler/article_body'
