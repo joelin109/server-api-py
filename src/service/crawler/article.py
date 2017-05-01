@@ -32,7 +32,8 @@ def request_crawl_articles():
                         _crawl_article_count += 1
 
                 except Exception as ex:
-                    print(_cover_url + '   |   ' + str(len(_cover_url)) + '  |   ' + _published_at)
+                    print(_published_at + '   |   ' + str(len(_cover_url)) + '  |   '
+                          + str(len(_new_article.original_url)) + '  |   ' + str(len(_new_article.title)))
                     print(ex)
                     # raise RuntimeError(ex)
 

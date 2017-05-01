@@ -72,7 +72,7 @@ class ContentArticle(db.Model):
     __tablename__ = _table_content_article_.lower()
     id = db.Column('article_id', db.String(32), primary_key=True)
     cover_thumbnail_src = db.Column('cover_thumbnail_src', db.String(200))
-    cover_src = db.Column('cover_src', db.String(100))
+    cover_src = db.Column('cover_src', db.String(200))
     title = db.Column('title', db.String(100), nullable=False, index=True)
     subtitle = db.Column('subtitle', db.String(100))
     # 0 (None) - 1/Html - 2/Markdown - 3/JSon - 4/Text
@@ -82,7 +82,7 @@ class ContentArticle(db.Model):
     desc = db.Column('desc', db.String(255))
     channel_id = db.Column('channel_id', db.String(32), index=True)
     tag_id = db.Column('tag_id', db.String(32), index=True)
-    original_url = db.Column('original_url', db.String(100))  # original resource
+    original_url = db.Column('original_url', db.String(150))  # original resource
     original_author = db.Column('original_author', db.String(50))  # original author
 
     is_original = db.Column('is_original', db.Boolean(), nullable=False, default=False)

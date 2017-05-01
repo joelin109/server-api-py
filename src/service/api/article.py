@@ -23,6 +23,17 @@ class ArticleApi(Resource):
         return {"Token": _userToken, "Data": _userData}
 
 
+class ArticleStatusApi(Resource):
+    def get(self):
+        pass
+
+    def post(self):
+        _request_data = api_request_parse()
+
+        print(_request_data)
+        return _request_data
+
+
 class ArticleListApi(Resource):
     def get(self):
         pass

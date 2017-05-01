@@ -29,10 +29,9 @@ db = SQLAlchemy()
 
 
 def custom_random_key(self, table_tag=None):
-    random_bytes = urandom(16)
+    random_bytes = urandom(18)
     _key = datetime.now().strftime('%y%m') + b64encode(random_bytes).decode('utf-8')
+    _key = _key if table_tag is None else table_tag + _key
 
-    if table_tag is None:
-        return _key
-    else:
-        return table_tag + _key
+    _key_32 = _key if len(_key) <= 32 else _key[0:32]
+    return _key_32

@@ -49,6 +49,7 @@ class ArticleLogic(UtilLogic):
             if list_filter is None:
                 list_filter = ArticleListFilter()
 
+            print(str(list_filter.page_num) + '   |  ' + str(list_filter.page_size))
             _listResult = ContentArticle.query.filter(list_filter.filter_sql) \
                 .order_by(ContentArticle.last_update_date.desc()) \
                 .paginate(list_filter.page_num, list_filter.page_size, False)
@@ -56,6 +57,7 @@ class ArticleLogic(UtilLogic):
         except Exception as ex:
             raise RuntimeError(ex)
 
+        print(_listResult.items[0].title)
         return self.result_page(_listResult)
 
     def get_top_list(self, filter_date):
