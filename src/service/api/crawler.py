@@ -4,7 +4,7 @@ from src.service.api.util import api_response_format, api_request_parse
 from src.service.crawler.article import request_crawl_articles, request_crawl_articles_body
 
 
-class CrawlerApi(Resource):
+class CrawlerArticleApi(Resource):
     def post(self):
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()
@@ -14,7 +14,7 @@ class CrawlerApi(Resource):
         return api_response_format(_result)
 
 
-class CrawlerBodyApi(Resource):
+class CrawlerArticleBodyApi(Resource):
     def post(self):
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()

@@ -4,7 +4,7 @@ from src.service.api.user import UserApi
 from src.service.api.channel import ChannelApi, ChannelListApi
 from src.service.api.article import ArticleApi, ArticleListApi
 from src.service.api.wort import WortApi, WortListApi
-from src.service.api.crawler import CrawlerApi, CrawlerBodyApi
+from src.service.api.crawler import CrawlerArticleApi, CrawlerArticleBodyApi
 
 
 def register_api_add_resource(app):
@@ -18,5 +18,5 @@ def register_api_add_resource(app):
     rest_api.add_resource(ArticleListApi, Conf.APIURL_Content_Article_List)
     rest_api.add_resource(WortApi, Conf.APIURL_Content_Dictionary_Post, Conf.APIURL_Content_Dictionary_Detail)
     rest_api.add_resource(WortListApi, Conf.APIURL_Content_Dictionary_List)
-    rest_api.add_resource(CrawlerApi, Conf.APIURL_Content_Crawler_Article)
-    rest_api.add_resource(CrawlerBodyApi, Conf.APIURL_Content_Crawler_Article_Body)
+    rest_api.add_resource(CrawlerArticleApi, Conf.APIURL_Content_Crawler_Article)
+    rest_api.add_resource(CrawlerArticleBodyApi, Conf.APIURL_Content_Crawler_Article_Body)
