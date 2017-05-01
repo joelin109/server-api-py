@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from src.service.model.model_account import User
+from src.service.api.util import api_response_format, api_request_parse
 from src.service.model.model_content import db, ContentArticle
 from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
 
@@ -28,4 +28,21 @@ class ArticleListApi(Resource):
         pass
 
     def post(self):
-        pass
+        _request_data = api_request_parse()
+
+        _list_filter = _get_request_data_filter(_request_data)
+        _logic = ArticleLogic()
+        _result_list, _page = _logic.get_list(_list_filter)
+        return api_response_format(_result_list, _page)
+
+
+def _get_request_data_filter(request_data):
+    if 'filter' in request_data:
+        _request_data_filter = request_data["filter"]
+
+        _list_filter = ArticleListFilter()
+        _list_filter.parse(_request_data_filter)
+        return _list_filter
+
+    else:
+        return None
