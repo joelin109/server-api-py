@@ -59,7 +59,7 @@ def request_crawl_tag_articles(crawl_tag):
                     print('-------------------------------------   ' + _published_at + '       ---------------')
                     print(str(len(_cover_url)) + '  |   ' + str(len(_new_article.original_url)) + '  |   '
                           + str(len(_new_article.title)) + '  |   ' + str(len(_new_article.desc)))
-                    print(ex)
+                    print(str(ex)[0:100])
                     # raise RuntimeError(ex)
 
     return _crawl_article_count, _crawl_timestamp
