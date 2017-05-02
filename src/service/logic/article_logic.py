@@ -60,10 +60,10 @@ class ArticleLogic(UtilLogic):
         print(_listResult.items[0].title)
         return self.result_page(_listResult)
 
-    def get_top_list(self, filter_date):
+    def get_top_list(self, filter_tag_id, filter_date):
         self._verify_except_case()
         try:
-            _filter_sql = 'last_update_date >= \'%s\'' % filter_date
+            _filter_sql = 'tag_id = \'%s\' AND last_update_date >= \'%s\'' % (filter_tag_id, filter_date)
             _listResult = ContentArticle.query.filter(_filter_sql).paginate(1, 100, False)
 
         except Exception as ex:

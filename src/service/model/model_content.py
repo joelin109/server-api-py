@@ -44,7 +44,8 @@ class ContentChannel(db.Model):
 
 class ContentTag(db.Model):
     __tablename__ = _table_content_tag_.lower()
-    id = db.Column('tag_id', db.String(32), primary_key=True)
+    id = db.Column('id', db.String(32), primary_key=True)
+    tag_id = db.Column('tag_id', db.String(32), nullable=False, unique=True, index=True)
     tag_title = db.Column('tag_title', db.String(50))
     tag_desc = db.Column('desc', db.String(255))
     display_order = db.Column('display_order', db.SmallInteger())
@@ -73,8 +74,8 @@ class ContentArticle(db.Model):
     id = db.Column('article_id', db.String(32), primary_key=True)
     cover_thumbnail_src = db.Column('cover_thumbnail_src', db.String(200))
     cover_src = db.Column('cover_src', db.String(200))
-    title = db.Column('title', db.String(100), nullable=False, index=True)
-    subtitle = db.Column('subtitle', db.String(100))
+    title = db.Column('title', db.String(150), nullable=False, index=True)
+    subtitle = db.Column('subtitle', db.String(150))
     # 0 (None) - 1/Html - 2/Markdown - 3/JSon - 4/Text
     format_type = db.Column('format_type', db.SmallInteger, nullable=False, default=0)
     body_text = db.Column('body_text', db.Text())
@@ -82,7 +83,7 @@ class ContentArticle(db.Model):
     desc = db.Column('desc', db.String(255))
     channel_id = db.Column('channel_id', db.String(32), index=True)
     tag_id = db.Column('tag_id', db.String(32), index=True)
-    original_url = db.Column('original_url', db.String(150))  # original resource
+    original_url = db.Column('original_url', db.String(200))  # original resource
     original_author = db.Column('original_author', db.String(50))  # original author
 
     is_original = db.Column('is_original', db.Boolean(), nullable=False, default=False)
@@ -96,7 +97,7 @@ class ContentArticle(db.Model):
     approve_date = db.Column('approve_date', db.DateTime())
     last_update_user_id = db.Column('last_update_user_id', db.String(32))
     last_update_ip = db.Column('last_update_ip', db.String(50))
-    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, index=True)
+    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, unique=True, index=True)
     valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1, index=True)
 
     publish_at = db.Column('publish_at', db.String(50), nullable=False, default=0, index=True)

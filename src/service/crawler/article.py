@@ -1,8 +1,9 @@
 import requests
-from src.service.model.model_content import db, ContentArticle
+from datetime import datetime
+from src.service.model.model_content import ContentArticle, ContentTag
+from src.service.logic.tag_logic import request_article_tags
 from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
 from src.service.crawler.article_body import request_crawl_article_bodys
-from datetime import datetime
 
 crawl_article_url = 'https://newsapi.org/v1/articles'
 crawl_article_user_id = 'AP1701yHiCT8v0dnTZm9TR6zJd3A=='
@@ -10,14 +11,36 @@ crawl_article_channel_id = ''
 
 
 def request_crawl_articles():
+    _crawl_result = []
+    _tag_list = request_article_tags()
+
+    for _tag in _tag_list:
+        _crawl_tag = ContentTag(_tag["tag_title"])
+        _crawl_tag.tag_id = _tag["tag_id"]
+        _crawl_status = 1 if 'is_crawl' not in _tag else _tag['is_crawl']
+
+        if _crawl_status == 1:
+            _crawl_count, _crawl_timestamp = request_crawl_tag_articles(_crawl_tag)
+
+            _crawl_result_tag = dict()
+            _crawl_result_tag["tag_id"] = _tag["tag_id"]
+            _crawl_result_tag["tag_title"] = _tag["tag_title"]
+            _crawl_result_tag["crawl_count"] = _crawl_count
+            _crawl_result_tag["crawl_timestamp"] = _crawl_timestamp
+            _crawl_result.append(_crawl_result_tag)
+
+    return _crawl_result
+
+
+def request_crawl_tag_articles(crawl_tag):
     _crawl_article_count = 0
-    _tag = {}
-    _crawl_status, _crawl_result, _crawl_publish_at = _crawl_article_result(_tag)
-    print(_crawl_publish_at)
+    _crawl_tag_id = crawl_tag.tag_id
+    _crawl_status, _crawl_result, _crawl_timestamp = _crawl_article_result(crawl_tag)
+    print(_crawl_timestamp)
 
     if _crawl_status:
         _logic = ArticleLogic()
-        _top_list = _get_local_crawl_article_list(_tag, _crawl_publish_at)
+        _top_list = _get_local_crawl_article_list(_crawl_tag_id, _crawl_timestamp)
 
         for crawl_article in _crawl_result:
             _cover_url = crawl_article["urlToImage"]
@@ -28,43 +51,47 @@ def request_crawl_articles():
                     _is_exist = _is_exist_local(_top_list, _published_at)
                     if _is_exist is False:
                         _new_article = _parse_crawl_article(crawl_article, '')
+                        _new_article.tag_id = _crawl_tag_id
                         _logic.new(_new_article)
                         _crawl_article_count += 1
 
                 except Exception as ex:
-                    print(_published_at + '   |   ' + str(len(_cover_url)) + '  |   '
-                          + str(len(_new_article.original_url)) + '  |   ' + str(len(_new_article.title)))
+                    print('-------------------------------------   ' + _published_at + '       ---------------')
+                    print(str(len(_cover_url)) + '  |   ' + str(len(_new_article.original_url)) + '  |   '
+                          + str(len(_new_article.title)) + '  |   ' + str(len(_new_article.desc)))
                     print(ex)
                     # raise RuntimeError(ex)
 
-    print(str(_crawl_article_count))
-    return _top_list
+    return _crawl_article_count, _crawl_timestamp
 
 
 def _crawl_article_result(tag):
-    _params = {"sortBy": 'top', "source": 'entertainment-weekly', "apiKey": 'c53e3bc3f12b4f8ba9b7505d14a4d9f3'}
+    _crawl_tag_title = tag.tag_title
+    _param_order_by = 'latest' if _crawl_tag_title == 'der-tagesspiegel' else 'top'
+    _params = {"sortBy": _param_order_by, "source": _crawl_tag_title, "apiKey": 'c53e3bc3f12b4f8ba9b7505d14a4d9f3'}
+
     _response = requests.get(crawl_article_url, _params)
     _response_status = _response.status_code
     _response_json = _response.json()
-    _publish_at = ''
+    _timestamp = ''
 
     if _response_status == 200:
         _results = _response_json["articles"]
         _result_count = len(_results)
-        if _result_count >= 6:
-            _published_at = _results[_result_count - 3]["publishedAt"]
-            _publish_at = _published_at if _published_at is not None else _results[_result_count - 2]["publishedAt"]
+        if _result_count >= 4:
+            _published_at = _results[_result_count - 1]["publishedAt"]
+            _timestamp = _published_at if _published_at is not None else _results[_result_count - 2]["publishedAt"]
 
-        _publish_at = _publish_at[0:10] + ' 00:00:00' if _publish_at is not None else ''
-        return True, _results, _publish_at
+        _timestamp = datetime.now().strftime('%Y-%m-%d %H:%M') if _timestamp is None or _timestamp == '' else _timestamp
+        return True, _results, _timestamp[0:10] + ' 00:00:00'
 
     else:
-        return False, _response_status, _publish_at
+        return False, _response_status, _timestamp
 
 
-def _get_local_crawl_article_list(tag=None, published_at=None):
+def _get_local_crawl_article_list(tag_id=None, published_at=None):
     _logic = ArticleLogic()
-    _list = _logic.get_top_list(published_at)
+    _list = _logic.get_top_list(tag_id, published_at)
     return _list
 
 
