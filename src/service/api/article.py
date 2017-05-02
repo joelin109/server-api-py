@@ -13,9 +13,8 @@ class ArticleApi(Resource):
         _article_id = _request_data["id"]
         _original_url = None if 'original_url' not in _request_data else _request_data['original_url']
         _logic = ArticleLogic()
-        _result_detail = _logic.get_detail(_article_id)
+        _result_detail = _logic.get_detail(_article_id, _original_url)
 
-        print(_result_detail)
         return api_response_detail_format(_result_detail)
 
 

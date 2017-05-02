@@ -1,6 +1,7 @@
 from src.service.model.model_content import db, ContentArticle, ContentDictionary
 from src.service.logic.util_logic import UtilLogic
 from datetime import datetime
+from src.service.crawler.article_body import crawl_article_body
 from src.service.util.logger import *
 
 
@@ -78,7 +79,7 @@ class ArticleLogic(UtilLogic):
         _result = dict()
         _result["id"] = article_id
         _result["original_url"] = original_url
-        _result["body_text"] = '<p>dfgfdgdfg</p>'
+        _result["body_text"] = crawl_article_body(original_url)
 
         # _word = ContentArticle.query.filter_by(id=article_id).first()
         return _result
