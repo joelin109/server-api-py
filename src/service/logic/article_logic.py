@@ -72,11 +72,16 @@ class ArticleLogic(UtilLogic):
         _result_row = [m.parse_top() for m in _listResult.items]
         return _result_row
 
-    def get_detail(self, article_id):
+    def get_detail(self, article_id, original_url=None):
         self._verify_except_case()
 
-        _word = ContentArticle.query.filter_by(id=article_id).first()
-        return _word
+        _result = dict()
+        _result["id"] = article_id
+        _result["original_url"] = original_url
+        _result["body_text"] = '<p>dfgfdgdfg</p>'
+
+        # _word = ContentArticle.query.filter_by(id=article_id).first()
+        return _result
 
 
 class ArticleListFilter:

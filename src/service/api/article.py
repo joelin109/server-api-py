@@ -1,26 +1,22 @@
 from flask_restful import Resource, reqparse
-from src.service.api.util import api_response_format, api_request_parse
-from src.service.model.model_content import db, ContentArticle
+from src.service.api.util import api_response_format, api_response_detail_format, api_request_parse
 from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
 
 
 class ArticleApi(Resource):
     def get(self, post_id=None):
-        if post_id:
-            db.session.commit()
-            users = User.query.filter_by(id=post_id).first()
-            return {"Hello": users.username}
-
-        return {"Hello": "Joe"}
+        _name = "Joe" if post_id is None else post_id
+        return {"Hello": _name}
 
     def post(self, post_id=None):
-        parser = reqparse.RequestParser()
-        parser.add_argument('token', type=str, location='json')
-        parser.add_argument('data', location='json')
-        args = parser.parse_args()
-        _userToken = args['token']
-        _userData = args['data']
-        return {"Token": _userToken, "Data": _userData}
+        _request_data = api_request_parse()
+        _article_id = _request_data["id"]
+        _original_url = None if 'original_url' not in _request_data else _request_data['original_url']
+        _logic = ArticleLogic()
+        _result_detail = _logic.get_detail(_article_id)
+
+        print(_result_detail)
+        return api_response_detail_format(_result_detail)
 
 
 class ArticleStatusApi(Resource):

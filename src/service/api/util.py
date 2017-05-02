@@ -1,7 +1,4 @@
 from src.service.config import SQLConfig
-from src.service.model.db_connection import db
-from src.service.model.model_content import ContentArticle
-from sqlalchemy import func
 from flask_restful import reqparse
 
 
@@ -40,13 +37,23 @@ def api_response_format(result_list=None, page=None):
         return {"error": "........"}
         raise
     finally:
-        print('api_response_format - finally')
+        print('api_response_format - finally - Done')
 
 
-def sidebar_data():
-    recent = ContentArticle.query.order_by(ContentArticle.create_date.desc()).limit(5).all()
-    top_tags = db.session.query(
-        Tag, func.count(tags.c.post_id).label('total')
-    ).join(tags).group_by(Tag).order_by('total DESC').limit(5).all()
+def api_response_detail_format(result=None):
+    try:
+        _response = {
+            "code": 1,
+            "desc": "success",
+            "resource": SQLConfig.SQLALCHEMY_DATABASE_URI.split(":")[0],
+            "result": result
+        }
+        return _response
 
-    return recent, top_tags
+    except IOError as error:
+        return {"error": "I/O error: {0}".format(error)}
+    except:
+        return {"error": "........"}
+        raise
+    finally:
+        print('api_response_detail_format - finally - Done')
