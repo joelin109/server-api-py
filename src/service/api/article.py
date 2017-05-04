@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from src.service.api.util import api_response_format, api_response_detail_format, api_request_parse
+from src.service.model.model_content import ContentArticle
 from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
 
 
@@ -25,8 +26,15 @@ class ArticleStatusApi(Resource):
     def post(self):
         _request_data = api_request_parse()
 
-        print(_request_data)
-        return _request_data
+        _article = ContentArticle('')
+        _article.id = _request_data["id"]
+        _article.is_recommend = _request_data["is_recommend"]
+        _article.publish_status = _request_data["publish_status"]
+
+        _logic = ArticleLogic()
+        _request_data['result']= _logic.update_aticle_status(_article)
+
+        return api_response_detail_format(_request_data)
 
 
 class ArticleListApi(Resource):

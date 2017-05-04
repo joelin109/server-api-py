@@ -20,7 +20,7 @@ class ArticleLogic(UtilLogic):
     def update_aticle(self, article):
         self._verify_except_case()
 
-        ContentDictionary.query.filter_by(id=article.id).update({
+        ContentArticle.query.filter_by(id=article.id).update({
             ContentArticle.format_type: article.format_type,
             ContentArticle.body_text: article.body_text,
             ContentArticle.body_parse_level: article.body_parse_level,
@@ -31,10 +31,26 @@ class ArticleLogic(UtilLogic):
         db.session.commit()
         return True
 
+    def update_aticle_status(self, article):
+        self._verify_except_case()
+        print(article.id)
+        print(article.is_recommend)
+        try:
+            ContentArticle.query.filter_by(id=article.id).update({
+                ContentArticle.publish_status: article.publish_status,
+                ContentArticle.is_recommend: article.is_recommend
+                # ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            })
+            db.session.commit()
+            return True
+        except Exception as ex:
+            print(str(ex)[0:500])
+            return False
+
     def update_aticle_body(self, article):
         self._verify_except_case()
 
-        ContentDictionary.query.filter_by(id=article.id).update({
+        ContentArticle.query.filter_by(id=article.id).update({
             ContentArticle.format_type: article.format_type,
             ContentArticle.body_text: article.body_text,
             ContentArticle.body_parse_level: article.body_parse_level,
