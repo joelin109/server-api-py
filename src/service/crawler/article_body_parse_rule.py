@@ -3,48 +3,55 @@ import re
 
 
 def crawl_http_url_parse_rule(url):
+    _del_div_tag_pool = ['share-icons', 'inner-wrapper', 'article-tags', 'view-content', 'newsletter-signup']
+
+    _article_content_pool = ['mashable.com', 'www.tagesspiegel.de']
+    _del_div_tag_pool2 = ['bonus-video-card', 'newsletter-signup']
+    for _url_tag in _article_content_pool:
+        if url.find(_url_tag) > 0:
+            return 'article-content', _del_div_tag_pool2
+
+    # www.wired.de
+    if url.find('www.wired.de') > 0:
+        return 'article-content', _del_div_tag_pool
+
     # ars - technica
     if url.find('arstechnica.com') > 0:
-        return 'article-content post-page'
+        return 'article-content post-page', _del_div_tag_pool
 
     # buzzfeed ?
     if url.find('www.buzzfeed.com') > 0:
-        return ''
+        return '', _del_div_tag_pool
 
     # cnn
     if url.find('www.cnn.com') > 0:
-        return 'zn-body__paragraph'
-
-    # der-tagesspiegel ?
-    if url.find('www.tagesspiegel.de') > 0:
-        return 'article-content'
+        return 'zn-body__paragraph', _del_div_tag_pool
 
     # google-news  from everywhere
     if url.find('www.nytimes.com') > 0:
-        return 'story-body-supplemental'
+        return 'story-body-supplemental', _del_div_tag_pool
 
     # bbc-news
     if url.find('www.bbc.co.uk') > 0:
-        return 'story-body__inner'
+        return 'story-body__inner', _del_div_tag_pool
     if url.find('www.bbc.com') > 0:
-        return 'story-body__inner'
+        return 'story-body__inner', _del_div_tag_pool
 
     # entertainment-weekly
     if url.find('ew.com') > 0:
-        return 'article-body__inner'
+        return 'article-body__inner', _del_div_tag_pool
 
     # the-new-york-times ?
     if url.find('www.nytimes.com') > 0:
-        return 'story-body-supplemental'
+        return 'story-body-supplemental', _del_div_tag_pool
 
-    # wired-de
-    if url.find('www.wired.de') > 0:
-        return 'article-content'
+    if url.find('thenextweb.com') > 0:
+        return 'post-body', _del_div_tag_pool
 
-    return ''
+    return '', {}
 
 
-def crawl_http_article_body_html(soup):
+def crawl_http_article_body_html(soup, del_div_tags):
     # type(soups) - bs4.element.ResultSet
     _tag_figures = soup('figure')
     _tag_figure_count = len(_tag_figures)
@@ -60,15 +67,21 @@ def crawl_http_article_body_html(soup):
     for _del_h5_tag in _del_h5_tags:
         [s.extract() for s in _soup_body(_del_h5_tag)]
 
-    _del_div_classes = ['share-icons', 'inner-wrapper', 'article-tags', 'view-content', 'newsletter-signup']
-    for _del_div_class in _del_div_classes:
+    # del_div_tags = ['share-icons', 'inner-wrapper', 'article-tags', 'view-content', 'newsletter-signup']
+    for _del_div_class in del_div_tags:
         [s.extract() for s in _soup_body.find_all("div", _del_div_class)]
 
     _del_div_re_classes = ['hidden']
     for _del_div_re_class in _del_div_re_classes:
         [s.extract() for s in _soup_body.find_all(attrs={'class': re.compile(r'' + _del_div_re_class)})]
 
-    # print(_soup_body.prettify())
+    _tag_imgs = _soup_body.find_all('img')
+    for img in _tag_imgs:
+        if 'src' in img.attrs:
+            print(img)
+        else:
+            img.extract()
+
     return _soup_body
 
 

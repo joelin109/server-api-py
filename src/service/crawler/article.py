@@ -66,8 +66,9 @@ def request_crawl_tag_articles(crawl_tag):
 
 
 def _crawl_article_result(tag):
+    _latest_pool = ['der-tagesspiegel', 'the-next-web']
     _crawl_tag_title = tag.tag_title
-    _param_order_by = 'latest' if _crawl_tag_title == 'der-tagesspiegel' else 'top'
+    _param_order_by = 'latest' if _crawl_tag_title in _latest_pool else 'top'
     _params = {"sortBy": _param_order_by, "source": _crawl_tag_title, "apiKey": 'c53e3bc3f12b4f8ba9b7505d14a4d9f3'}
 
     _response = requests.get(crawl_article_url, _params)
