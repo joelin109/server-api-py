@@ -79,7 +79,7 @@ class ContentArticle(db.Model):
     # 0 (None) - 1/Html - 2/Markdown - 3/JSon - 4/Text
     format_type = db.Column('format_type', db.SmallInteger, nullable=False, default=0)
     body_text = db.Column('body_text', db.Text())
-    body_parse_level = db.Column('body_parse_level', db.SmallInteger(), nullable=False, default=0, index=True)
+    body_match_level = db.Column('body_match_level', db.SmallInteger(), nullable=False, default=0, index=True)
     desc = db.Column('desc', db.String(255))
     channel_id = db.Column('channel_id', db.String(32), index=True)
     tag_id = db.Column('tag_id', db.String(32), index=True)
@@ -122,7 +122,7 @@ class ContentArticle(db.Model):
             "original_url": self.original_url,
             "desc": self.desc,
             "format_type": self.format_type,
-            "body_parse_level": self.body_parse_level,
+            "body_match_level": self.body_match_level,
             "channel_id": self.channel_id,
             "tag_id": self.tag_id,
             "publish_at": self.publish_at,
@@ -144,8 +144,26 @@ class ContentArticle(db.Model):
         }
         return result_row
 
-    def parse_publish_at(self):
-        return self.last_update_date.strftime('%Y-%m-%d %H:%M:%S')
+    def parse_detail(self):
+        result_row = {
+            "id": self.id,
+            "cover_thumbnail_src": self.cover_thumbnail_src,
+            "cover_src": self.cover_src,
+            "title": self.title,
+            "subtitle": self.subtitle,
+            "original_url": self.original_url,
+            "desc": self.desc,
+            "channel_id": self.channel_id,
+            "tag_id": self.tag_id,
+            "publish_at": self.publish_at,
+            "last_update_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S'),
+            "is_recommend": self.is_recommend,
+            "publish_status": self.publish_status,
+            "format_type": self.format_type,
+            "body_text": self.body_text,
+            "body_match_level": self.body_match_level
+        }
+        return result_row
 
 
 class ContentDictionary(db.Model):

@@ -1,7 +1,6 @@
 from src.service.model.model_content import db, ContentArticle, ContentDictionary
 from src.service.logic.util_logic import UtilLogic
 from datetime import datetime
-from src.service.crawler.article_body import crawl_article_body
 from src.service.util.logger import *
 
 
@@ -23,7 +22,7 @@ class ArticleLogic(UtilLogic):
         ContentArticle.query.filter_by(id=article.id).update({
             ContentArticle.format_type: article.format_type,
             ContentArticle.body_text: article.body_text,
-            ContentArticle.body_parse_level: article.body_parse_level,
+            ContentArticle.body_match_level: article.body_match_level,
             ContentArticle.publish_status: article.publish_status,
             ContentArticle.is_recommend: article.is_recommend,
             ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -50,16 +49,18 @@ class ArticleLogic(UtilLogic):
     def update_aticle_body(self, article):
         self._verify_except_case()
 
-        ContentArticle.query.filter_by(id=article.id).update({
-            ContentArticle.format_type: article.format_type,
-            ContentArticle.body_text: article.body_text,
-            ContentArticle.body_parse_level: article.body_parse_level,
-            ContentArticle.publish_status: article.publish_status,
-            ContentArticle.is_recommend: article.is_recommend,
-            ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        })
-        db.session.commit()
-        return True
+        try:
+            ContentArticle.query.filter_by(id=article.id).update({
+                ContentArticle.title: article.title,
+                ContentArticle.body_text: article.body_text,
+                ContentArticle.body_match_level: article.body_match_level,
+                ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            })
+            db.session.commit()
+            return True
+        except Exception as ex:
+            print(str(ex)[0:500])
+            return False
 
     def get_list(self, list_filter=None):
         try:
@@ -89,15 +90,19 @@ class ArticleLogic(UtilLogic):
         _result_row = [m.parse_top() for m in _listResult.items]
         return _result_row
 
-    def get_detail(self, article_id, original_url=None):
+    def get_detail(self, article_id):
         self._verify_except_case()
 
         _result = dict()
         _result["id"] = article_id
-        _result["original_url"] = original_url
-        _result["body_text"] = crawl_article_body(original_url)
 
-        # _word = ContentArticle.query.filter_by(id=article_id).first()
+        try:
+            _article = ContentArticle.query.filter_by(id=article_id).first()
+            _result = _article.parse_detail()
+        except Exception as ex:
+            print(str(ex)[0:500])
+            _result["status"] = False
+
         return _result
 
 

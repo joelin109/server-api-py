@@ -5,12 +5,12 @@ from src.service.crawler.http_html_parse import HttpURlHtmlParse
 def request_crawl_article_bodys():
     _url = 'http://ew.com/news/2017/04/30/hasan-minhaj-trump-spicer-white-house-correspondents-dinner-best-jokes/'
     _url2 = 'https://arstechnica.com/the-multiverse/2017/04/colossal-review-everyone-has-a-monster-most-arent-this-fun/'
-    _crawl_body_text = crawl_article_body(_url)
+    _crawl_body_text = crawl_http_url(_url)
     # print(_crawl_body_text)
     return ''
 
 
-def crawl_article_body(crawl_url=None):
+def crawl_http_url(crawl_url=None):
     _url = '' if crawl_url is None else crawl_url
     # _url = 'https://www.washingtonpost.com/posteverything/wp/2017/02/16/my-grandfather-helped-create-captain-america-for-times-like-these/?utm_term=.c60914db592f'
 
