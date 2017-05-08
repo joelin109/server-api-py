@@ -23,7 +23,7 @@ class ArticleApi(Resource):
 class ArticleStatusApi(Resource):
     def post(self):
         _request_data = api_request_parse()
-
+        print(_request_data)
         _article = ContentArticle('')
         _article.id = _request_data["id"]
         _article.is_recommend = _request_data["is_recommend"]
@@ -66,12 +66,15 @@ def _get_request_data(request_data):
     _article = ContentArticle('')
     _article.id = request_data["id"]
     _article.title = request_data["title"]
+    _article.is_recommend = request_data["is_recommend"]
+    _article.publish_status = request_data["publish_status"]
     _article.cover_src = request_data["cover_src"]
     # request_data["body_match_level"]
-    _article.body_match_level = 3
     _article.body_text = request_data["body_text"]
+    _article.body_match_level = -1 if len(_article.body_text) < 10 else 3
 
-    print(_article.id + '     |      ' + _article.title)
+    print(_article.id + ': ' + _article.title + '  |  '
+          + str(_article.body_match_level) + ' | ' + str(_article.publish_status))
     return _article
 
 

@@ -52,6 +52,8 @@ class ArticleLogic(UtilLogic):
         try:
             ContentArticle.query.filter_by(id=article.id).update({
                 ContentArticle.title: article.title,
+                ContentArticle.is_recommend: article.is_recommend,
+                ContentArticle.publish_status: article.publish_status,
                 ContentArticle.body_text: article.body_text,
                 ContentArticle.body_match_level: article.body_match_level,
                 ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -69,7 +71,7 @@ class ArticleLogic(UtilLogic):
 
             print(str(list_filter.page_num) + '   |  ' + str(list_filter.page_size))
             _listResult = ContentArticle.query.filter(list_filter.filter_sql) \
-                .order_by(ContentArticle.last_update_date.desc()) \
+                .order_by(ContentArticle.publish_at.desc()) \
                 .paginate(list_filter.page_num, list_filter.page_size, False)
 
         except Exception as ex:

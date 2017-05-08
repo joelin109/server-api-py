@@ -3,9 +3,10 @@ from src.service.config import Conf
 from src.service.api.util import api_request_parse, api_response_format, api_response_detail_format
 from src.service.crawler.article import request_crawl_articles, request_crawl_articles_body
 from src.service.crawler.article_body import crawl_http_url
+from src.service.crawler.word import request_crawl_words
 
 
-class CrawlerArticleApi(Resource):
+class CrawlArticleApi(Resource):
     def post(self):
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()
@@ -15,7 +16,7 @@ class CrawlerArticleApi(Resource):
         return api_response_format(_result)
 
 
-class CrawlerArticleBodyApi(Resource):
+class CrawlArticleBodyApi(Resource):
     def post(self):
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()
@@ -25,7 +26,7 @@ class CrawlerArticleBodyApi(Resource):
         return _request_data
 
 
-class CrawlerHttpURLApi(Resource):
+class CrawlHttpURLApi(Resource):
     def post(self):
         print(reqparse.request.path)
         _parser = reqparse.RequestParser()
@@ -39,4 +40,13 @@ class CrawlerHttpURLApi(Resource):
         _result["original_url"] = _crawl_http_url
         _result["body_text"] = crawl_http_url(_crawl_http_url)
 
+        return api_response_detail_format(_result)
+
+
+class CrawlWortApi(Resource):
+    def post(self):
+        _request_data = api_request_parse()
+        print(_request_data)
+
+        _result = request_crawl_words()
         return api_response_detail_format(_result)

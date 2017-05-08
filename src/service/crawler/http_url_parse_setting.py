@@ -1,4 +1,4 @@
-class HttpURlHtmlParse:
+class HttpURlParse:
     url = ''
     html_parse_body_tag = ''
     will_del_h5_tags = ['script', 'figcaption', 'aside', 'video']
@@ -53,7 +53,11 @@ class HttpURlHtmlParse:
             self.html_parse_body_tag = 'story-body-supplemental'
 
         if _base_url.find('thenextweb.com') > 0:
+            self.will_del_div_tags.append('post-in-content-tags')
             self.html_parse_body_tag = 'post-body'
+
+        if _base_url.find('www.washingtonpost.com') > 0:
+            self.html_parse_body_tag = 'article-article-body'
 
     def display(self):
         print(self.url + '  |  ' + self.html_parse_body_tag)

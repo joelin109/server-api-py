@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup, Comment
 import re
 import requests
-from src.service.crawler.http_html_parse import HttpURlHtmlParse
+from src.service.crawler.http_url_parse_setting import HttpURlParse
 from src.service.crawler.http_html_parse_util import clean_reset_body_html
 
 
@@ -15,7 +15,7 @@ class HttpHtmlCrawler:
     soup_match_count = 0
     soup_html_text = ''
 
-    def __init__(self, parser: HttpURlHtmlParse):
+    def __init__(self, parser: HttpURlParse):
         self.url = parser.url
         self.html_parse_body_tag = parser.html_parse_body_tag
         self.will_del_h5_tags = parser.will_del_h5_tags

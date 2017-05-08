@@ -1,12 +1,8 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
-from src.service.model.model_content import db, ContentDictionary
-from src.service.api.util import api_response_format, api_request_parse
+from src.service.model.model_content import ContentDictionary
+from src.service.api.util import api_response_format, api_response_detail_format,  api_request_parse
 from src.service.logic.dictionary_logic import DictionaryLogic, WordListFilter
-import asyncio
-import selectors
-
-loop = asyncio.get_event_loop()
 
 
 class WortApi(Resource):
@@ -45,8 +41,7 @@ def _response_result(_post_wort):
         _logic.update_word(_post_wort)
 
     if reqparse.request.path == Conf.APIURL_Content_Dictionary_Remove:
-        db.session.delete(_word.first())
-        db.session.commit()
+        _logic.delete(_word.first())
 
     # await asyncio.sleep(2)
     _list, _page = _logic.get_list()

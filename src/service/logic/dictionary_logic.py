@@ -34,6 +34,13 @@ class DictionaryLogic(UtilLogic):
         db.session.commit()
         return True
 
+    def delete(self, wort):
+        self._verify_except_case()
+
+        db.session.delete(wort)
+        db.session.commit()
+        return True
+
     # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
     def get_list(self, list_filter=None):
         try:
