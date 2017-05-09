@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup, Comment
 import re
 import requests
 from src.service.crawler.http_url_parse_setting import HttpURlParse
-from src.service.crawler.http_html_parse_util import clean_reset_body_html
+from src.service.crawler.html_parse_util import clean_reset_body_html
 
 
 class HttpHtmlCrawler:
@@ -27,21 +27,25 @@ class HttpHtmlCrawler:
 
     def _start_crawl(self):
         _user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
-        _response = requests.get(self.url, headers={'User-Agent': _user_agent})
-        _response.encoding = 'utf-8'
-        _soup = BeautifulSoup(_response.text, "lxml")
+        try:
+            _response = requests.get(self.url, headers={'User-Agent': _user_agent})
+            _response.encoding = 'utf-8'
+            _soup = BeautifulSoup(_response.text, "lxml")
 
-        # _soup_bodys = _soup.find_all("div", _body_parse_rule)
-        # _soup_bodys = _soup.find_all(lambda tag: tag.get('class') == [_body_parse_rule])
-        # _soup_bodys = _soup.find_all(attrs={'class': re.compile(r'^' + _body_parse_rule + '$')})
-        self.soup_body = _soup.find_all(attrs={'class': re.compile(r'' + self.html_parse_body_tag)})
+            # _soup_bodys = _soup.find_all("div", _body_parse_rule)
+            # _soup_bodys = _soup.find_all(lambda tag: tag.get('class') == [_body_parse_rule])
+            # _soup_bodys = _soup.find_all(attrs={'class': re.compile(r'^' + _body_parse_rule + '$')})
+            self.soup_body = _soup.find_all(attrs={'class': re.compile(r'' + self.html_parse_body_tag)})
+        except Exception as ex:
+            self.soup_html_text = str(ex)[0:500]
 
     def _start_parse(self):
-        _soup_body_count = len(self.soup_body)
-        if _soup_body_count >= 1:
-            for _soup_body in self.soup_body:
-                _soup_body_html_text = self._parse_soup_body_html_text(_soup_body)
-                self.soup_html_text += _soup_body_html_text + '<p></p>'
+        if self.soup_body is not None:
+            _soup_body_count = len(self.soup_body)
+            if _soup_body_count >= 1:
+                for _soup_body in self.soup_body:
+                    _soup_body_html_text = self._parse_soup_body_html_text(_soup_body)
+                    self.soup_html_text += _soup_body_html_text + '<p></p>'
 
     def _parse_soup_body_html_text(self, soup):
         self._clean_common_useless_html(soup)

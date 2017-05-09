@@ -1,4 +1,4 @@
-from src.service.crawler.http_html_crawler import HttpHtmlCrawler
+from src.service.crawler.http_request_crawler import HttpHtmlCrawler
 from src.service.crawler.http_url_parse_setting import HttpURlParse
 
 
