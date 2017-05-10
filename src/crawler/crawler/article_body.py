@@ -1,5 +1,5 @@
-from src.service.crawler.http_request_crawler import HttpHtmlCrawler
-from src.service.crawler.http_url_parse_setting import HttpURlParse
+from src.crawler.crawler.http_request_crawler import HttpHtmlCrawler
+from src.crawler.crawler.http_url_parse_setting import HttpURlParse
 
 
 def request_crawl_article_bodys():

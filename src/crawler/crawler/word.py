@@ -1,4 +1,4 @@
-from src.service.crawler.http_selenium_crawler import crawl_http_url
+from src.crawler.crawler.http_selenium_crawler import crawl_http_url
 
 
 def request_crawl_words():

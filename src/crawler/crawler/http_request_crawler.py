@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup, Comment
 import re
 import requests
-from src.service.crawler.http_url_parse_setting import HttpURlParse
-from src.service.crawler.html_parse_util import clean_reset_body_html
+from src.crawler.crawler.http_url_parse_setting import HttpURlParse
+from src.crawler.crawler.html_parse_util import clean_reset_body_html
 
 
 class HttpHtmlCrawler:

@@ -1,9 +1,9 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.api.util import api_request_parse, api_response_format, api_response_detail_format
-from src.service.crawler.article import request_crawl_articles, request_crawl_articles_body
-from src.service.crawler.article_body import crawl_http_url
-from src.service.crawler.word import request_crawl_words
+from src.crawler.crawler.article import request_crawl_articles, request_crawl_articles_body
+from src.crawler.crawler.article_body import crawl_http_url
+from src.crawler.crawler.word import request_crawl_words
 
 
 class CrawlArticleApi(Resource):

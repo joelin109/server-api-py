@@ -3,7 +3,7 @@ from datetime import datetime
 from src.service.model.model_content import ContentArticle, ContentTag
 from src.service.logic.tag_logic import request_article_tags
 from src.service.logic.article_logic import ArticleLogic, ArticleListFilter
-from src.service.crawler.article_body import request_crawl_article_bodys
+from src.crawler.crawler.article_body import request_crawl_article_bodys
 
 crawl_article_url = 'https://newsapi.org/v1/articles'
 crawl_article_user_id = 'AP1701yHiCT8v0dnTZm9TR6zJd3A=='
