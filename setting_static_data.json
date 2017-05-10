@@ -1,0 +1,117 @@
+{
+    "code": "1",
+    "desc": "Successful",
+    "resource": "Postgres",
+    "result": {
+        "channels": [
+            {
+                "channel_id": "c10001",
+                "channel_title": "Top News",
+                "channel_level": 1,
+                "display_order": 1
+            },
+            {
+                "channel_id": "c10002",
+                "channel_title": "Deustch",
+                "channel_level": 1,
+                "display_order": 2
+            },
+            {
+                "channel_id": "c10003",
+                "channel_title": "Geek",
+                "channel_level": 1,
+                "display_order": 3
+            },
+            {
+                "channel_id": "c10004",
+                "channel_title": "Channel",
+                "channel_level": 1,
+                "display_order": 4
+            }
+        ],
+        "tags": [
+            {
+                "tag_id": "t10001",
+                "tag_title": "ars-technica",
+                "display_order": 1
+            },
+            {
+                "tag_id": "t10002",
+                "tag_title": "buzzfeed",
+                "display_order": 2,
+                "is_crawl": 0
+            },
+            {
+                "tag_id": "t10003",
+                "tag_title": "cnn",
+                "display_order": 3
+            },
+            {
+                "tag_id": "t10004",
+                "tag_title": "der-tagesspiegel",
+                "display_order": 4,
+                "is_crawl": 0
+            },
+            {
+                "tag_id": "t10005",
+                "tag_title": "google-news",
+                "display_order": 5,
+                "is_crawl": 0
+            },
+            {
+                "tag_id": "t10006",
+                "tag_title": "bbc-news",
+                "display_order": 6
+            },
+            {
+                "tag_id": "t10007",
+                "tag_title": "entertainment-weekly",
+                "display_order": 7,
+                 "is_crawl": 0
+            },
+            {
+                "tag_id": "t10008",
+                "tag_title": "the-new-york-times",
+                "display_order": 8
+            },
+            {
+                "tag_id": "t10009",
+                "tag_title": "wired-de",
+                "display_order": 8
+            },
+            {
+                "tag_id": "t10010",
+                "tag_title": "the-washington-post",
+                "display_order": 9
+            },
+            {
+                "tag_id": "t10011",
+                "tag_title": "bloomberg",
+                "display_order": 10
+            },
+            {
+                "tag_id": "t10012",
+                "tag_title": "the-next-web",
+                "display_order": 11
+            },
+            {
+                "tag_id": "t10013",
+                "tag_title": "mashable",
+                "display_order": 12,
+                "is_crawl": 1
+            },
+            {
+                "tag_id": "t10014",
+                "tag_title": "recode",
+                "display_order": 13,
+                "is_crawl": 0
+            },
+            {
+                "tag_id": "t20001",
+                "tag_title": "deutsch grammar",
+                "display_order": 11,
+                "is_crawl": 0
+            }
+        ]
+    }
+}
