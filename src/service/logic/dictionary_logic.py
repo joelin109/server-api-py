@@ -1,6 +1,8 @@
-from src.service.model.model_content import db, ContentDictionary
-from src.service.logic.util_logic import UtilLogic
 from datetime import datetime
+from src.service.model.db_connection import connection, execute_total
+from src.service.logic.util_logic import UtilLogic, ListFilter
+from src.service.model.model_content import ContentDictionary
+from sqlalchemy.inspection import inspect
 from sqlalchemy.sql.expression import or_
 from sqlalchemy import desc
 from src.service.util.logger import *
@@ -11,14 +13,14 @@ class DictionaryLogic(UtilLogic):
     def new(self, new_wort):
         self._verify_except_case()
 
-        db.session.add(new_wort)
-        db.session.commit()
+        connection.add(new_wort)
+        connection.commit()
         return True
 
-    def update_word(self, new_wort):
+    def update(self, new_wort):
         self._verify_except_case()
 
-        ContentDictionary.query.filter_by(id=new_wort.id).update({
+        connection.query(ContentDictionary).filter_by(id=new_wort.id).update({
             ContentDictionary.wort_sex: new_wort.wort_sex,
             ContentDictionary.level: new_wort.level,
             ContentDictionary.type: new_wort.type,
@@ -29,16 +31,16 @@ class DictionaryLogic(UtilLogic):
             ContentDictionary.konjugation: new_wort.konjugation,
             ContentDictionary.is_regel: new_wort.is_regel,
             ContentDictionary.is_recommend: new_wort.is_recommend,
-            ContentDictionary.update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ContentDictionary.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
-        db.session.commit()
+        connection.commit()
         return True
 
     def delete(self, wort):
         self._verify_except_case()
 
-        db.session.delete(wort)
-        db.session.commit()
+        connection.delete(wort)
+        connection.commit()
         return True
 
     # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
@@ -47,41 +49,40 @@ class DictionaryLogic(UtilLogic):
             if list_filter is None:
                 list_filter = WordListFilter()
 
-            _filter_sql = list_filter.filter_sql + " ORDER BY lower(wort)"
-            _listResult = ContentDictionary.query.filter(_filter_sql) \
-                .paginate(list_filter.page_num, list_filter.page_size, False)
+            _filter_sql = list_filter.filter_sql + " ORDER BY lower(wort) " + list_filter.offset_limit_sql
+            # print(_filter_sql)
+            # _listResult = session.execute("select * from content_dictionary_de limit 10", mapper=ContentDictionary)
+            _listResult = connection.query(ContentDictionary).filter(_filter_sql)
+            _total = execute_total(ContentDictionary.__tablename__, list_filter.filter_sql)
 
         except Exception as ex:
+            print('get_list except Exception as ex')
             raise RuntimeError(ex)
 
-        return self.result_page(_listResult)
+        # for row in _listResult:
+        #    for s in inspect(ContentDictionary).attrs.keys():
+        #        if s in row:
+        #            print(row)
+
+        return self.new_result_page(_listResult, list_filter, _total)
 
     def get_detail(self, word_id):
         self._verify_except_case()
 
-        _word = ContentDictionary.query.filter_by(wort=word_id).first()
+        _word = connection.query(ContentDictionary).filter_by(wort=word_id).first()
         return _word
 
 
-class WordListFilter:
-    page_num = 1
-    page_size = 100
-    publish_status = 1
-    is_recommend = 0
+class WordListFilter(ListFilter):
     is_regel = -1
     word_letter = ""
     word_sex = ""
     word_type = ""
-    filter_sql = "1=1"
 
     def parse(self, data_filter=None):
-        self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
+        self.base_parse(data_filter)
 
-        if 'page_size' in data_filter:
-            self.page_size = data_filter['page_size']
-        if 'is_recommend' in data_filter:
-            self.is_recommend = data_filter["is_recommend"]
         self.word_letter = data_filter["letter"]
 
-        _filter_letter = 'lower(SUBSTRING(wort, 1, 1)) = \'%s\' ' % self.word_letter.lower()
+        _filter_letter = 'lower(substring(wort, 1, 1)) = \'%s\' ' % self.word_letter.lower()
         self.filter_sql = '1=1' if self.word_letter == '' else _filter_letter

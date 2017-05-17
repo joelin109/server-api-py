@@ -15,7 +15,7 @@ class ArticleApi(Resource):
         print(_request_data)
         _article = _get_request_data(_request_data)
         _logic = ArticleLogic()
-        _result = _logic.update_aticle_body(_article)
+        _result = _logic.update_article_body(_article)
 
         return api_response_detail_format(_result)
 
@@ -23,14 +23,16 @@ class ArticleApi(Resource):
 class ArticleStatusApi(Resource):
     def post(self):
         _request_data = api_request_parse()
-        print(_request_data)
+
         _article = ContentArticle('')
         _article.id = _request_data["id"]
-        _article.is_recommend = _request_data["is_recommend"]
+        _is_recommend = _request_data["is_recommend"]
+        _article.is_recommend = True if _is_recommend == 1 or _is_recommend else False
+
         _article.publish_status = _request_data["publish_status"]
 
         _logic = ArticleLogic()
-        _request_data['result'] = _logic.update_aticle_status(_article)
+        _request_data['result'] = _logic.update_article_status(_article)
 
         return api_response_detail_format(_request_data)
 
@@ -50,8 +52,6 @@ class ArticleListApi(Resource):
 
 class ArticleDetailApi(Resource):
     def post(self, post_id=None):
-        print(
-            'ArticleDetailApiArticleDetailApiArticleDetailApiArticleDetailApiArticleDetailApiArticleDetailApiArticleDetailApi')
         _request_data = api_request_parse()
         _article_id = _request_data["id"]
         print(_request_data)
@@ -66,7 +66,9 @@ def _get_request_data(request_data):
     _article = ContentArticle('')
     _article.id = request_data["id"]
     _article.title = request_data["title"]
-    _article.is_recommend = request_data["is_recommend"]
+    _is_recommend = request_data["is_recommend"]
+    _article.is_recommend = True if _is_recommend == 1 or _is_recommend else False
+
     _article.publish_status = request_data["publish_status"]
     _article.cover_src = request_data["cover_src"]
     # request_data["body_match_level"]

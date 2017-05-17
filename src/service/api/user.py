@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
-from src.service.model.model_account import db, User
+from src.service.model.model_account import User
 from src.service.api.util import api_response_format
+from src.service.logic.user_logic import UserLogic
 
 
 class UserApi(Resource):
@@ -23,25 +24,18 @@ class UserApi(Resource):
         _userName = _data["UserName"]
         _password = _data["Password"]
 
-        _user = User.query.filter_by(id=_userID)
-        if _user.count() == 0:
+        _logic = UserLogic()
+        _user = _logic.get_detail(_userID)
+
+        if _user is None:
             new_user = User(_userName)
             new_user.password = _password
-            db.session.add(new_user)
-            db.session.commit()
-        elif _user.count() == 1:
-            User.query.filter_by(id=_userID).update({
-                User.username: _userName,
-                User.password: _password
-            })
-            db.session.commit()
+            _logic.new(new_user)
         else:
-            print(_user.count())
+            _logic.update(_user)
 
         if reqparse.request.path == Conf.APIURL_USER_Remove:
-            db.session.delete(_user.first())
-            db.session.commit()
+            _logic.delete(_user)
 
-        _userPage = User.query.order_by(User.id.desc()).paginate(1, 15, False)
-        print(type(_userPage.items))
+        _userPage = _logic.get_list()
         return api_response_format(_userPage)

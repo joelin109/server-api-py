@@ -2,6 +2,7 @@ from flask import render_template, Blueprint, redirect, url_for, flash, g
 from flask_login import LoginManager, login_user, logout_user
 from flask_principal import Principal, Permission, RoleNeed
 from src.service.model.model_account import User
+from src.service.logic.user_logic import UserLogic
 
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField
@@ -33,14 +34,16 @@ class LoginForm(FlaskForm):
             return False
         else:
             # Does our the exist
-            user = User.query.filter_by(account_name=self.username.data).first()
-            if not user:
+            _logic = UserLogic()
+            _user = _logic.get_detail_by_auth(self.username.data)
+
+            if not _user:
                 self.username.errors.append('Invalid username or password')
                 return False
             else:
                 return True
                 # Do the passwords match
-                if not user.check_password(self.password.data):
+                if not _user.check_password(self.password.data):
                     self.username.errors.append('Invalid username or password')
                     return False
                 else:
@@ -49,9 +52,9 @@ class LoginForm(FlaskForm):
 
 @login_manager.user_loader
 def load_user(user_id):
-    _user = User.query.get(user_id)
-    print("load_user")
-    print(_user)
+    _logic = UserLogic()
+    _user = _logic.get_detail(user_id)
+    print("extension_login: load_user")
     return _user
 
 
@@ -60,7 +63,9 @@ def login(page=1):
     _form = LoginForm()
 
     if _form.validate_on_submit():
-        _user = User.query.filter_by(account_name=_form.username.data).one()
+        _logic = UserLogic()
+        _user = _logic.get_detail_by_auth(_form.username.data)
+
         login_user(_user, remember=_form.remember.data)
 
         flash("You have been logged in.", category="success")

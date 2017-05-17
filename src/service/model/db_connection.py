@@ -1,37 +1,41 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker
 import pymysql
 from src.service.config import SQLConfig
 
-from datetime import datetime
-from base64 import b64encode
-from os import urandom
+
+class DataBase:
+    uri = SQLConfig.SQLALCHEMY_DATABASE_URI
+
+    def engine(self):
+        return create_engine(self.uri, echo=False)
+
+    def connection(self):
+        print('connection - create_engine')
+        _engine = self.engine()
+        _Session = sessionmaker(bind=_engine)  # 将创建的数据库连接关联到这个session
+        return _Session()
 
 
-def mysql_db_connection(uri):
-    database_uri = uri.split(":")[0]
+def register_db_connection(app):
+    _uri = DataBase().uri
+    database_uri = _uri.split(":")[0]
     if database_uri == 'mysql':
         pymysql.install_as_MySQLdb()
     else:
         print(database_uri)
 
-
-def register_db_connection(app):
-    app.config.from_object(SQLConfig)
-    db.init_app(app)
+# connection ~ = db.session (db = db = SQLAlchemy())
+connection = DataBase().connection()
 
 
-mysql_db_connection(SQLConfig.SQLALCHEMY_DATABASE_URI)
-"""
-app = Flask(__name__)
-db = SQLAlchemy(app)
-"""
-db = SQLAlchemy()
+def execute_total(table, filter_sql=None):
+    _filter_sql = "" if filter_sql is None else " where " + filter_sql
+    _count_sql = "select count(*) from " + table + _filter_sql
+    _listCount = connection.execute(_count_sql)
 
+    _total = 0
+    for c in _listCount:
+        _total = c.count
 
-def custom_random_key(self, table_tag=None):
-    random_bytes = urandom(18)
-    _key = datetime.now().strftime('%y%m') + b64encode(random_bytes).decode('utf-8')
-    _key = _key if table_tag is None else table_tag + _key
-
-    _key_32 = _key if len(_key) <= 32 else _key[0:32]
-    return _key_32
+    return _total

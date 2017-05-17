@@ -38,7 +38,7 @@ def _response_result(_post_wort):
         _logic.new(_post_wort)
     else:
         _post_wort.id = _word.id
-        _logic.update_word(_post_wort)
+        _logic.update(_post_wort)
 
     if reqparse.request.path == Conf.APIURL_Content_Dictionary_Remove:
         _logic.delete(_word.first())

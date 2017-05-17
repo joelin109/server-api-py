@@ -1,5 +1,6 @@
-from src.service.model.model_content import db, ContentArticle, ContentDictionary
-from src.service.logic.util_logic import UtilLogic
+from src.service.model.db_connection import connection, execute_total
+from src.service.logic.util_logic import UtilLogic, ListFilter
+from src.service.model.model_content import ContentArticle
 from datetime import datetime
 from src.service.util.logger import *
 
@@ -7,19 +8,22 @@ from src.service.util.logger import *
 class ArticleLogic(UtilLogic):
     def new(self, new_article):
         self._verify_except_case()
+
         try:
-            db.session.add(new_article)
-            db.session.commit()
+            connection.add(new_article)
+            connection.commit()
         except:
-            db.session.rollback()
+            connection.rollback()
             raise
+        finally:
+            connection.close()
 
         return True
 
-    def update_aticle(self, article):
+    def update(self, article):
         self._verify_except_case()
 
-        ContentArticle.query.filter_by(id=article.id).update({
+        connection.query(ContentArticle).filter_by(id=article.id).update({
             ContentArticle.format_type: article.format_type,
             ContentArticle.body_text: article.body_text,
             ContentArticle.body_match_level: article.body_match_level,
@@ -27,30 +31,32 @@ class ArticleLogic(UtilLogic):
             ContentArticle.is_recommend: article.is_recommend,
             ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
-        db.session.commit()
+        connection.commit()
         return True
 
-    def update_aticle_status(self, article):
+    def update_article_status(self, article):
         self._verify_except_case()
-        print(article.id)
-        print(article.is_recommend)
+
         try:
-            ContentArticle.query.filter_by(id=article.id).update({
+            connection.query(ContentArticle).filter_by(id=article.id).update({
                 ContentArticle.publish_status: article.publish_status,
                 ContentArticle.is_recommend: article.is_recommend
                 # ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
-            db.session.commit()
-            return True
+            connection.commit()
         except Exception as ex:
             print(str(ex)[0:500])
-            return False
+            connection.rollback()
+            self.exec_result = False
+        finally:
+            connection.close()
+            return self.exec_result
 
-    def update_aticle_body(self, article):
+    def update_article_body(self, article):
         self._verify_except_case()
 
         try:
-            ContentArticle.query.filter_by(id=article.id).update({
+            connection.query(ContentArticle).filter_by(id=article.id).update({
                 ContentArticle.title: article.title,
                 ContentArticle.is_recommend: article.is_recommend,
                 ContentArticle.publish_status: article.publish_status,
@@ -58,38 +64,39 @@ class ArticleLogic(UtilLogic):
                 ContentArticle.body_match_level: article.body_match_level,
                 ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
-            db.session.commit()
-            return True
+            connection.commit()
         except Exception as ex:
             print(str(ex)[0:500])
-            return False
+            connection.rollback()
+            self.exec_result = False
+        finally:
+            connection.close()
+            return self.exec_result
 
     def get_list(self, list_filter=None):
         try:
             if list_filter is None:
                 list_filter = ArticleListFilter()
 
-            print(str(list_filter.page_num) + '   |  ' + str(list_filter.page_size))
-            _listResult = ContentArticle.query.filter(list_filter.filter_sql) \
-                .order_by(ContentArticle.publish_at.desc()) \
-                .paginate(list_filter.page_num, list_filter.page_size, False)
+            _filter_sql = list_filter.filter_sql + " order by publish_at desc " + list_filter.offset_limit_sql
+            _listResult = connection.query(ContentArticle).filter(_filter_sql)
+            _total = execute_total(ContentArticle.__tablename__, list_filter.filter_sql)
 
         except Exception as ex:
             raise RuntimeError(ex)
 
-        print(_listResult.items[0].title)
-        return self.result_page(_listResult)
+        return self.new_result_page(_listResult, list_filter, _total)
 
     def get_top_list(self, filter_tag_id, filter_date):
         self._verify_except_case()
         try:
-            _filter_sql = 'tag_id = \'%s\' AND last_update_date >= \'%s\'' % (filter_tag_id, filter_date)
-            _listResult = ContentArticle.query.filter(_filter_sql).paginate(1, 100, False)
+            _filter_sql = 'tag_id = \'%s\' AND last_update_date >= \'%s\' limit 100' % (filter_tag_id, filter_date)
+            _listResult = connection.query(ContentArticle).filter(_filter_sql)
 
         except Exception as ex:
             raise RuntimeError(ex)
 
-        _result_row = [m.parse_top() for m in _listResult.items]
+        _result_row = [m.parse_top() for m in _listResult]
         return _result_row
 
     def get_detail(self, article_id):
@@ -99,7 +106,7 @@ class ArticleLogic(UtilLogic):
         _result["id"] = article_id
 
         try:
-            _article = ContentArticle.query.filter_by(id=article_id).first()
+            _article = connection.query(ContentArticle).filter_by(id=article_id).first()  # .one()
             _result = _article.parse_detail()
         except Exception as ex:
             print(str(ex)[0:500])
@@ -108,20 +115,13 @@ class ArticleLogic(UtilLogic):
         return _result
 
 
-class ArticleListFilter:
-    page_num = 1
-    page_size = 100
-    publish_status = 1
-    is_recommend = 0
+class ArticleListFilter(ListFilter):
     published_at = ""
     publish_status = -1
-    filter_sql = "1=1"
 
     def parse(self, data_filter=None):
-        self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
+        self.base_parse(data_filter)
 
-        if 'page_size' in data_filter:
-            self.page_size = data_filter['page_size']
         if 'publish_status' in data_filter:
             self.publish_status = data_filter["publish_status"]
             self.filter_sql += ' AND publish_status = %s' % self.publish_status

@@ -3,7 +3,8 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
 import os
 
-from src.service.model.model_content import db, ContentArticle, ContentDictionary, ContentChannel
+from src.service.model.db_connection import connection
+from src.service.model.model_content import ContentArticle, ContentDictionary, ContentChannel
 from src.service.model.model_account import User
 from src.webhttp.form_admin_article import CKTextAreaField
 
@@ -55,22 +56,22 @@ def register_admin(app):
     _admin.add_view(CustomView(name='CustomJ'))
     _admin.add_view(
         CustomModelView(
-            User, db.session, category='Models'
+            User, connection, category='Models'
         )
     )
     _admin.add_view(
         CustomModelView(
-            ContentChannel, db.session, category='Models'
+            ContentChannel, connection, category='Models'
         )
     )
     _admin.add_view(
         CustomModelView(
-            ContentDictionary, db.session, category='Models'
+            ContentDictionary, connection, category='Models'
         )
     )
     _admin.add_view(
         AdminArticleView(
-            ContentArticle, db.session, category='Models'
+            ContentArticle, connection, category='Models'
         )
     )
     _admin.add_view(

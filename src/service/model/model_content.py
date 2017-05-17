@@ -1,6 +1,9 @@
-from sqlalchemy.inspection import inspect
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Table, Column, String, Integer, SmallInteger, DateTime, Boolean, Text, ForeignKey
 from datetime import datetime
-from src.service.model.db_connection import db, custom_random_key
+from src.service.model.model import custom_random_key, serialize
+
+BaseModel = declarative_base()
 
 _table_content_channel_ = "content_channel"
 _table_content_tag_ = "content_tag"
@@ -14,23 +17,23 @@ _table_content_relation_article_tag = "content_relation_article_tag"
 _table_content_relation_article_account = "content_relation_article_account_201701"
 
 
-class ContentChannel(db.Model):
+class ContentChannel(BaseModel):
     __tablename__ = _table_content_channel_.lower()
-    id = db.Column('id', db.String(32), primary_key=True)
-    channel_id = db.Column('channel_id', db.String(32), nullable=False, unique=True, index=True)
-    channel_title = db.Column('channel_title', db.String(50), nullable=False, )
-    channel_desc = db.Column('desc', db.String(255))
-    parent_channel_id = db.Column('parent_channel_id', db.String(32))
-    channel_level = db.Column('channel_level', db.SmallInteger(), nullable=False)
-    display_order = db.Column('display_order', db.SmallInteger(), nullable=False, default=-1)
-    valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1)
+    id = Column('id', String(32), primary_key=True)
+    channel_id = Column('channel_id', String(32), nullable=False, unique=True, index=True)
+    channel_title = Column('channel_title', String(50), nullable=False, )
+    channel_desc = Column('desc', String(255))
+    parent_channel_id = Column('parent_channel_id', String(32))
+    channel_level = Column('channel_level', SmallInteger(), nullable=False)
+    display_order = Column('display_order', SmallInteger(), nullable=False, default=-1)
+    valid_status = Column('valid_status', SmallInteger(), nullable=False, default=1)
 
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    create_ip = db.Column('create_ip', db.String(50))
-    create_user_id = db.Column('create_user_id', db.String(32))
-    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, default=datetime.now())
-    last_update_ip = db.Column('last_update_ip', db.String(50))
-    last_update_user_id = db.Column('last_update_user_id', db.String(32))
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    create_ip = Column('create_ip', String(50))
+    create_user_id = Column('create_user_id', String(32))
+    last_update_date = Column('last_update_date', DateTime(), nullable=False, default=datetime.now())
+    last_update_ip = Column('last_update_ip', String(50))
+    last_update_user_id = Column('last_update_user_id', String(32))
 
     def __init__(self):
         self.id = custom_random_key(self, "CC")
@@ -42,21 +45,21 @@ class ContentChannel(db.Model):
         return serialize(self)
 
 
-class ContentTag(db.Model):
+class ContentTag(BaseModel):
     __tablename__ = _table_content_tag_.lower()
-    id = db.Column('id', db.String(32), primary_key=True)
-    tag_id = db.Column('tag_id', db.String(32), nullable=False, unique=True, index=True)
-    tag_title = db.Column('tag_title', db.String(50))
-    tag_desc = db.Column('desc', db.String(255))
-    display_order = db.Column('display_order', db.SmallInteger())
-    valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1)
+    id = Column('id', String(32), primary_key=True)
+    tag_id = Column('tag_id', String(32), nullable=False, unique=True, index=True)
+    tag_title = Column('tag_title', String(50))
+    tag_desc = Column('desc', String(255))
+    display_order = Column('display_order', SmallInteger())
+    valid_status = Column('valid_status', SmallInteger(), nullable=False, default=1)
 
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    create_ip = db.Column('create_ip', db.String(50))
-    create_user_id = db.Column('create_user_id', db.String(32))
-    last_update_date = db.Column('last_update_date', db.DateTime())
-    last_update_ip = db.Column('last_update_ip', db.String(50))
-    last_update_user_id = db.Column('last_update_user_id', db.String(32))
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    create_ip = Column('create_ip', String(50))
+    create_user_id = Column('create_user_id', String(32))
+    last_update_date = Column('last_update_date', DateTime())
+    last_update_ip = Column('last_update_ip', String(50))
+    last_update_user_id = Column('last_update_user_id', String(32))
 
     def __init__(self, title):
         self.tag_title = title
@@ -69,40 +72,41 @@ class ContentTag(db.Model):
 
 
 # 01-12 ?
-class ContentArticle(db.Model):
+class ContentArticle(BaseModel):
     __tablename__ = _table_content_article_.lower()
-    id = db.Column('article_id', db.String(32), primary_key=True)
-    cover_thumbnail_src = db.Column('cover_thumbnail_src', db.String(200))
-    cover_src = db.Column('cover_src', db.String(200))
-    title = db.Column('title', db.String(150), nullable=False, index=True)
-    subtitle = db.Column('subtitle', db.String(150))
+
+    id = Column('article_id', String(32), primary_key=True)
+    cover_thumbnail_src = Column('cover_thumbnail_src', String(200))
+    cover_src = Column('cover_src', String(200))
+    title = Column('title', String(150), nullable=False, index=True)
+    subtitle = Column('subtitle', String(150))
     # 0 (None) - 1/Html - 2/Markdown - 3/JSon - 4/Text
-    format_type = db.Column('format_type', db.SmallInteger, nullable=False, default=0)
-    body_text = db.Column('body_text', db.Text())
-    body_match_level = db.Column('body_match_level', db.SmallInteger(), nullable=False, default=0, index=True)
-    desc = db.Column('desc', db.String(255))
-    channel_id = db.Column('channel_id', db.String(32), index=True)
-    tag_id = db.Column('tag_id', db.String(32), index=True)
-    original_url = db.Column('original_url', db.String(200))  # original resource
-    original_author = db.Column('original_author', db.String(50))  # original author
+    format_type = Column('format_type', SmallInteger, nullable=False, default=0)
+    body_text = Column('body_text', Text())
+    body_match_level = Column('body_match_level', SmallInteger(), nullable=False, default=0, index=True)
+    desc = Column('desc', String(255))
+    channel_id = Column('channel_id', String(32), index=True)
+    tag_id = Column('tag_id', String(32), index=True)
+    original_url = Column('original_url', String(200))  # original resource
+    original_author = Column('original_author', String(50))  # original author
 
-    is_original = db.Column('is_original', db.Boolean(), nullable=False, default=False)
-    create_user_id = db.Column('create_user_id', db.String(32), nullable=False, index=True)
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    create_ip = db.Column('create_ip', db.String(50))
-    create_device_serial = db.Column('create_device_serial', db.String(50))
-    create_location = db.Column('create_location', db.String(50))
-    approve_status = db.Column('approve_status', db.SmallInteger(), nullable=False, default=1)
-    approve_user_id = db.Column('approve_user_id', db.String(32))
-    approve_date = db.Column('approve_date', db.DateTime())
-    last_update_user_id = db.Column('last_update_user_id', db.String(32))
-    last_update_ip = db.Column('last_update_ip', db.String(50))
-    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, unique=True, index=True)
-    valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1, index=True)
+    is_original = Column('is_original', Boolean(), nullable=False, default=False)
+    create_user_id = Column('create_user_id', String(32), nullable=False, index=True)
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    create_ip = Column('create_ip', String(50))
+    create_device_serial = Column('create_device_serial', String(50))
+    create_location = Column('create_location', String(50))
+    approve_status = Column('approve_status', SmallInteger(), nullable=False, default=1)
+    approve_user_id = Column('approve_user_id', String(32))
+    approve_date = Column('approve_date', DateTime())
+    last_update_user_id = Column('last_update_user_id', String(32))
+    last_update_ip = Column('last_update_ip', String(50))
+    last_update_date = Column('last_update_date', DateTime(), nullable=False, unique=True, index=True)
+    valid_status = Column('valid_status', SmallInteger(), nullable=False, default=1, index=True)
 
-    publish_at = db.Column('publish_at', db.String(50), nullable=False, default=0, index=True)
-    publish_status = db.Column('publish_status', db.SmallInteger(), nullable=False, default=0, index=True)
-    is_recommend = db.Column('is_recommend', db.Boolean(), nullable=False, default=False, index=True)
+    publish_at = Column('publish_at', String(50), nullable=False, default=0, index=True)
+    publish_status = Column('publish_status', SmallInteger(), nullable=False, default=0, index=True)
+    is_recommend = Column('is_recommend', Boolean(), nullable=False, default=False, index=True)
 
     def __init__(self, title=None):
         self.id = custom_random_key(self, "CA")
@@ -166,25 +170,24 @@ class ContentArticle(db.Model):
         return result_row
 
 
-class ContentDictionary(db.Model):
+class ContentDictionary(BaseModel):
     __tablename__ = _table_content_dictionary_de.lower()
-    id = db.Column(db.Integer(), primary_key=True)
-    wort = db.Column('wort', db.String(32), nullable=False, unique=True)
-    wort_sex = db.Column('wort_sex', db.String(10), nullable=False, default='-', index=True)
-    plural = db.Column('plural', db.String(32), nullable=False, default='-')
-    wort_zh = db.Column('zh', db.String(50))
-    wort_en = db.Column('en', db.String(50))
-    level = db.Column('level', db.String(10), nullable=False, default='A', index=True)
-    type = db.Column('type', db.String(10), nullable=False, default='', index=True)
-    synonym = db.Column('synonym', db.String(50))
-    konjugation = db.Column('konjugation', db.String(32))
-    is_regel = db.Column('is_regel', db.SmallInteger, nullable=False, default=1, index=True)
-    is_recommend = db.Column('is_recommend', db.SmallInteger, nullable=False, default=0, index=True)
-    is_ignore = db.Column('is_ignore', db.SmallInteger, nullable=False, default=0)
-    create_date = db.Column('create_date', db.DateTime(), nullable=False,
-                            default=datetime.now())
-    last_update_date = db.Column('last_update_date', db.DateTime(), nullable=False, default=datetime.now())
-    publish_status = db.Column('publish_status', db.SmallInteger(), nullable=False, default=0, index=True)
+    id = Column(Integer(), primary_key=True)
+    wort = Column('wort', String(32), nullable=False, unique=True)
+    wort_sex = Column('wort_sex', String(10), nullable=False, default='-', index=True)
+    plural = Column('plural', String(32), nullable=False, default='-')
+    wort_zh = Column('zh', String(50))
+    wort_en = Column('en', String(50))
+    level = Column('level', String(10), nullable=False, default='A', index=True)
+    type = Column('type', String(10), nullable=False, default='', index=True)
+    synonym = Column('synonym', String(50))
+    konjugation = Column('konjugation', String(32))
+    is_regel = Column('is_regel', SmallInteger, nullable=False, default=1, index=True)
+    is_recommend = Column('is_recommend', SmallInteger, nullable=False, default=0, index=True)
+    is_ignore = Column('is_ignore', SmallInteger, nullable=False, default=0)
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    last_update_date = Column('last_update_date', DateTime(), nullable=False, default=datetime.now())
+    publish_status = Column('publish_status', SmallInteger(), nullable=False, default=0, index=True)
 
     def __init__(self, wort=None):
         self.wort = wort
@@ -221,82 +224,76 @@ class ContentDictionary(db.Model):
 
 
 # 01-12 (Article)
-class ContentComment(db.Model):
+class ContentComment(BaseModel):
     __tablename__ = _table_content_comment_.lower()
-    id = db.Column('comment_id', db.String(32), primary_key=True)
-    comment_desc = db.Column('comment_desc', db.String(255), nullable=False)
-    comment_like_times = db.Column('comment_like_times', db.SmallInteger, nullable=False, default=0)
+    id = Column('comment_id', String(32), primary_key=True)
+    comment_desc = Column('comment_desc', String(255), nullable=False)
+    comment_like_times = Column('comment_like_times', SmallInteger, nullable=False, default=0)
 
-    reply_user_id = db.Column('reply_user_id', db.String(32))
-    create_user_id = db.Column('create_user_id', db.String(32), nullable=False)
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    create_ip = db.Column('create_ip', db.String(50))
-    create_device_serial = db.Column('create_device_serial', db.String(50))
-    article_id = db.Column('article_id', db.String(32), db.ForeignKey('content_article.article_id'),
-                           nullable=False, index=True)
-    valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1, index=True)
+    reply_user_id = Column('reply_user_id', String(32))
+    create_user_id = Column('create_user_id', String(32), nullable=False)
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    create_ip = Column('create_ip', String(50))
+    create_device_serial = Column('create_device_serial', String(50))
+    article_id = Column('article_id', String(32), ForeignKey('content_article.article_id'), nullable=False, index=True)
+    valid_status = Column('valid_status', SmallInteger(), nullable=False, default=1, index=True)
 
     def parse(self):
         return serialize(self)
 
 
 # 01-12 (Article)
-class ContentLike(db.Model):
+class ContentLike(BaseModel):
     __tablename__ = _table_content_like_.lower()
-    id = db.Column('like_id', db.String(32), primary_key=True)
+    id = Column('like_id', String(32), primary_key=True)
 
-    create_user_id = db.Column('create_user_id', db.String(32), nullable=False)
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    create_ip = db.Column('create_ip', db.String(50))
-    create_device_serial = db.Column('create_device_serial', db.String(50))
-    article_id = db.Column('article_id', db.String(32), db.ForeignKey('content_article.article_id'),
-                           nullable=False, index=True)
-    valid_status = db.Column('valid_status', db.SmallInteger(), nullable=False, default=1, index=True)
+    create_user_id = Column('create_user_id', String(32), nullable=False)
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    create_ip = Column('create_ip', String(50))
+    create_device_serial = Column('create_device_serial', String(50))
+    article_id = Column('article_id', String(32), ForeignKey('content_article.article_id'), nullable=False, index=True)
+    valid_status = Column('valid_status', SmallInteger(), nullable=False, default=1, index=True)
 
     def parse(self):
         return serialize(self)
 
 
 # 01-12 ?
-class ContentStatisticArticle(db.Model):
+class ContentStatisticArticle(BaseModel):
     __tablename__ = _table_content_statistic_article.lower()
-    id = db.Column('article_id', db.String(32), primary_key=True)
-    like_times = db.Column('like_times', db.SmallInteger, nullable=False, default=0)
-    comment_times = db.Column('comment_times', db.SmallInteger, nullable=False, default=0)
+    id = Column('article_id', String(32), primary_key=True)
+    like_times = Column('like_times', SmallInteger, nullable=False, default=0)
+    comment_times = Column('comment_times', SmallInteger, nullable=False, default=0)
 
-    favorite_times = db.Column('favorite_times', db.SmallInteger, nullable=False, default=0)
-    view_times = db.Column('view_times', db.SmallInteger, nullable=False, default=0)
-    unlike_times = db.Column('unlike_times', db.SmallInteger, nullable=False, default=0)
-    forward_times = db.Column('forward_times', db.SmallInteger, nullable=False, default=0)
-    share_times = db.Column('share_times', db.SmallInteger, nullable=False, default=0)
-    create_date = db.Column('create_date', db.DateTime(), nullable=False, default=datetime.now())
-    last_update_date = db.Column('last_update_date', db.DateTime())
+    favorite_times = Column('favorite_times', SmallInteger, nullable=False, default=0)
+    view_times = Column('view_times', SmallInteger, nullable=False, default=0)
+    unlike_times = Column('unlike_times', SmallInteger, nullable=False, default=0)
+    forward_times = Column('forward_times', SmallInteger, nullable=False, default=0)
+    share_times = Column('share_times', SmallInteger, nullable=False, default=0)
+    create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
+    last_update_date = Column('last_update_date', DateTime())
 
 
-content_relation_tag = db.Table(
-    _table_content_relation_article_tag.lower(),
-    db.Column('ArticleID', db.String(32), db.ForeignKey('content_article.article_id'), primary_key=True),
-    db.Column('TagID', db.String(32), db.ForeignKey('content_tag.tag_id'), primary_key=True),
-    db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now()),
-    db.Column('CreateUserID', db.String(32), nullable=False),
-    db.Column('ValidStatus', db.Integer(), nullable=False, default=1),
-    db.Column('LastUpdateDate', db.DateTime())
+content_relation_tag = Table(
+    _table_content_relation_article_tag.lower(), BaseModel.metadata,
+    Column('ArticleID', String(32), ForeignKey('content_article.article_id'), primary_key=True),
+    Column('TagID', String(32), ForeignKey('content_tag.tag_id'), primary_key=True),
+    Column('CreateDate', DateTime(), nullable=False, default=datetime.now()),
+    Column('CreateUserID', String(32), nullable=False),
+    Column('ValidStatus', Integer(), nullable=False, default=1),
+    Column('LastUpdateDate', DateTime())
 )
 
-content_relation_account = db.Table(
-    _table_content_relation_article_account.lower(),
-    db.Column('ArticleID', db.String(32), db.ForeignKey('content_article.article_id'), primary_key=True),
-    db.Column('UserID', db.String(32), primary_key=True),
-    db.Column('Like', db.SmallInteger, nullable=False, default=0),
-    db.Column('Favorite', db.SmallInteger, nullable=False, default=0),
-    db.Column('View', db.SmallInteger, nullable=False, default=0),
-    db.Column('UnLike', db.SmallInteger, nullable=False, default=0),
-    db.Column('Share', db.SmallInteger, nullable=False, default=0),
-    db.Column('CreateDate', db.DateTime(), nullable=False, default=datetime.now()),
-    db.Column('LastUpdateDate', db.DateTime())
+content_relation_account = Table(
+    _table_content_relation_article_account.lower(), BaseModel.metadata,
+    Column('ArticleID', String(32), ForeignKey("content_article.article_id"), primary_key=True),
+    Column('UserID', String(32), primary_key=True),
+    Column('Like', SmallInteger, nullable=False, default=0),
+    Column('Favorite', SmallInteger, nullable=False, default=0),
+    Column('View', SmallInteger, nullable=False, default=0),
+    Column('UnLike', SmallInteger, nullable=False, default=0),
+    Column('Share', SmallInteger, nullable=False, default=0),
+    Column('CreateDate', DateTime(), nullable=False, default=datetime.now()),
+    Column('LastUpdateDate', DateTime())
 )
-
-
-def serialize(self):
-    return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
 
