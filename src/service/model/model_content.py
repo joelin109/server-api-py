@@ -276,24 +276,24 @@ class ContentStatisticArticle(BaseModel):
 
 content_relation_tag = Table(
     _table_content_relation_article_tag.lower(), BaseModel.metadata,
-    Column('ArticleID', String(32), ForeignKey('content_article.article_id'), primary_key=True),
-    Column('TagID', String(32), ForeignKey('content_tag.tag_id'), primary_key=True),
-    Column('CreateDate', DateTime(), nullable=False, default=datetime.now()),
-    Column('CreateUserID', String(32), nullable=False),
-    Column('ValidStatus', Integer(), nullable=False, default=1),
-    Column('LastUpdateDate', DateTime())
+    Column('article_id', String(32), ForeignKey('content_article.article_id'), primary_key=True),
+    Column('tag_id', String(32), ForeignKey('content_tag.tag_id'), primary_key=True),
+    Column('create_date', DateTime(), nullable=False, default=datetime.now()),
+    Column('create_user_id', String(32), nullable=False),
+    Column('valid_status', Integer(), nullable=False, default=1),
+    Column('last_update_date', DateTime())
 )
 
 content_relation_account = Table(
     _table_content_relation_article_account.lower(), BaseModel.metadata,
-    Column('ArticleID', String(32), ForeignKey("content_article.article_id"), primary_key=True),
-    Column('UserID', String(32), primary_key=True),
-    Column('Like', SmallInteger, nullable=False, default=0),
-    Column('Favorite', SmallInteger, nullable=False, default=0),
-    Column('View', SmallInteger, nullable=False, default=0),
-    Column('UnLike', SmallInteger, nullable=False, default=0),
-    Column('Share', SmallInteger, nullable=False, default=0),
-    Column('CreateDate', DateTime(), nullable=False, default=datetime.now()),
-    Column('LastUpdateDate', DateTime())
+    Column('article_id', String(32), ForeignKey("content_article.article_id"), primary_key=True),
+    Column('user_id', String(32), primary_key=True),
+    Column('like', SmallInteger, nullable=False, default=0),
+    Column('favorite', SmallInteger, nullable=False, default=0),
+    Column('view', SmallInteger, nullable=False, default=0),
+    Column('unlike', SmallInteger, nullable=False, default=0),
+    Column('share', SmallInteger, nullable=False, default=0),
+    Column('create_date', DateTime(), nullable=False, default=datetime.now()),
+    Column('last_update_date', DateTime())
 )
 
