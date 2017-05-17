@@ -2,11 +2,7 @@ from datetime import datetime
 from src.service.model.connection import conn, execute_total
 from src.service.logic.util_logic import UtilLogic, ListFilter
 from src.service.model.model_content import ContentDictionary
-from sqlalchemy.inspection import inspect
-from sqlalchemy.sql.expression import or_
-from sqlalchemy import desc
 from src.service.util.logger import *
-import traceback
 
 
 class DictionaryLogic(UtilLogic):

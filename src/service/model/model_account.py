@@ -2,7 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, SmallInteger, DateTime, Boolean, ForeignKey
 from datetime import datetime
 from src.service.model.model import custom_random_key, serialize
-from flask_login import AnonymousUserMixin
+from flask_login import AnonymousUserMixin    # for login auth
 
 BaseModel = declarative_base()
 _table_account_ = "account_profile"
