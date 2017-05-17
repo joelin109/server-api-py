@@ -1,4 +1,4 @@
-from src.service.model.db_connection import connection, execute_total
+from src.service.model.connection import conn, execute_total
 from src.service.logic.util_logic import UtilLogic, ListFilter
 from src.service.model.model_content import ContentArticle
 from datetime import datetime
@@ -10,20 +10,20 @@ class ArticleLogic(UtilLogic):
         self._verify_except_case()
 
         try:
-            connection.add(new_article)
-            connection.commit()
+            conn.add(new_article)
+            conn.commit()
         except:
-            connection.rollback()
+            conn.rollback()
             raise
         finally:
-            connection.close()
+            conn.close()
 
         return True
 
     def update(self, article):
         self._verify_except_case()
 
-        connection.query(ContentArticle).filter_by(id=article.id).update({
+        conn.query(ContentArticle).filter_by(id=article.id).update({
             ContentArticle.format_type: article.format_type,
             ContentArticle.body_text: article.body_text,
             ContentArticle.body_match_level: article.body_match_level,
@@ -31,32 +31,32 @@ class ArticleLogic(UtilLogic):
             ContentArticle.is_recommend: article.is_recommend,
             ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
-        connection.commit()
+        conn.commit()
         return True
 
     def update_article_status(self, article):
         self._verify_except_case()
 
         try:
-            connection.query(ContentArticle).filter_by(id=article.id).update({
+            conn.query(ContentArticle).filter_by(id=article.id).update({
                 ContentArticle.publish_status: article.publish_status,
                 ContentArticle.is_recommend: article.is_recommend
                 # ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
-            connection.commit()
+            conn.commit()
         except Exception as ex:
             print(str(ex)[0:500])
-            connection.rollback()
+            conn.rollback()
             self.exec_result = False
         finally:
-            connection.close()
+            conn.close()
             return self.exec_result
 
     def update_article_body(self, article):
         self._verify_except_case()
 
         try:
-            connection.query(ContentArticle).filter_by(id=article.id).update({
+            conn.query(ContentArticle).filter_by(id=article.id).update({
                 ContentArticle.title: article.title,
                 ContentArticle.is_recommend: article.is_recommend,
                 ContentArticle.publish_status: article.publish_status,
@@ -64,13 +64,13 @@ class ArticleLogic(UtilLogic):
                 ContentArticle.body_match_level: article.body_match_level,
                 ContentArticle.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
-            connection.commit()
+            conn.commit()
         except Exception as ex:
             print(str(ex)[0:500])
-            connection.rollback()
+            conn.rollback()
             self.exec_result = False
         finally:
-            connection.close()
+            conn.close()
             return self.exec_result
 
     def get_list(self, list_filter=None):
@@ -79,7 +79,7 @@ class ArticleLogic(UtilLogic):
                 list_filter = ArticleListFilter()
 
             _filter_sql = list_filter.filter_sql + " order by publish_at desc " + list_filter.offset_limit_sql
-            _listResult = connection.query(ContentArticle).filter(_filter_sql)
+            _listResult = conn.query(ContentArticle).filter(_filter_sql)
             _total = execute_total(ContentArticle.__tablename__, list_filter.filter_sql)
 
         except Exception as ex:
@@ -91,7 +91,7 @@ class ArticleLogic(UtilLogic):
         self._verify_except_case()
         try:
             _filter_sql = 'tag_id = \'%s\' AND last_update_date >= \'%s\' limit 100' % (filter_tag_id, filter_date)
-            _listResult = connection.query(ContentArticle).filter(_filter_sql)
+            _listResult = conn.query(ContentArticle).filter(_filter_sql)
 
         except Exception as ex:
             raise RuntimeError(ex)
@@ -106,7 +106,7 @@ class ArticleLogic(UtilLogic):
         _result["id"] = article_id
 
         try:
-            _article = connection.query(ContentArticle).filter_by(id=article_id).first()  # .one()
+            _article = conn.query(ContentArticle).filter_by(id=article_id).first()  # .one()
             _result = _article.parse_detail()
         except Exception as ex:
             print(str(ex)[0:500])

@@ -1,7 +1,7 @@
 from flask import Flask
 from src.www_setting import WwwConfig
 from src.service.api.api_source import *
-from src.service.model.db_connection import *
+from src.service.model.connection import *
 from src.webhttp.extension import register_extension
 
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.service.model.db_connection import connection, execute_total
+from src.service.model.connection import conn, execute_total
 from src.service.logic.util_logic import UtilLogic, ListFilter
 from src.service.model.model_content import ContentDictionary
 from sqlalchemy.inspection import inspect
@@ -13,14 +13,14 @@ class DictionaryLogic(UtilLogic):
     def new(self, new_wort):
         self._verify_except_case()
 
-        connection.add(new_wort)
-        connection.commit()
+        conn.add(new_wort)
+        conn.commit()
         return True
 
     def update(self, new_wort):
         self._verify_except_case()
 
-        connection.query(ContentDictionary).filter_by(id=new_wort.id).update({
+        conn.query(ContentDictionary).filter_by(id=new_wort.id).update({
             ContentDictionary.wort_sex: new_wort.wort_sex,
             ContentDictionary.level: new_wort.level,
             ContentDictionary.type: new_wort.type,
@@ -33,14 +33,14 @@ class DictionaryLogic(UtilLogic):
             ContentDictionary.is_recommend: new_wort.is_recommend,
             ContentDictionary.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
-        connection.commit()
+        conn.commit()
         return True
 
     def delete(self, wort):
         self._verify_except_case()
 
-        connection.delete(wort)
-        connection.commit()
+        conn.delete(wort)
+        conn.commit()
         return True
 
     # SECtable.date.endswith(matchingString) str(ContentDictionary.wort)[:1] == str("a")
@@ -52,7 +52,7 @@ class DictionaryLogic(UtilLogic):
             _filter_sql = list_filter.filter_sql + " ORDER BY lower(wort) " + list_filter.offset_limit_sql
             # print(_filter_sql)
             # _listResult = session.execute("select * from content_dictionary_de limit 10", mapper=ContentDictionary)
-            _listResult = connection.query(ContentDictionary).filter(_filter_sql)
+            _listResult = conn.query(ContentDictionary).filter(_filter_sql)
             _total = execute_total(ContentDictionary.__tablename__, list_filter.filter_sql)
 
         except Exception as ex:
@@ -69,7 +69,7 @@ class DictionaryLogic(UtilLogic):
     def get_detail(self, word_id):
         self._verify_except_case()
 
-        _word = connection.query(ContentDictionary).filter_by(wort=word_id).first()
+        _word = conn.query(ContentDictionary).filter_by(wort=word_id).first()
         return _word
 
 

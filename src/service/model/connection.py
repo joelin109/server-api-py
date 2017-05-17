@@ -26,13 +26,13 @@ def register_db_connection(app):
         print(database_uri)
 
 # connection ~ = db.session (db = db = SQLAlchemy())
-connection = DataBase().connection()
+conn = DataBase().connection()
 
 
 def execute_total(table, filter_sql=None):
     _filter_sql = "" if filter_sql is None else " where " + filter_sql
     _count_sql = "select count(*) from " + table + _filter_sql
-    _listCount = connection.execute(_count_sql)
+    _listCount = conn.execute(_count_sql)
 
     _total = 0
     for c in _listCount:

@@ -1,4 +1,4 @@
-from src.service.model.db_connection import DataBase
+from src.service.model.connection import DataBase
 from src.service.model.model_content import *
 
 
