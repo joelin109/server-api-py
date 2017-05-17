@@ -10,9 +10,11 @@ Flask-Celery-Helper==1.1.0
 
 SQLAlchemy==1.1.9
 PyMySQL==0.7.11
-asyncpg==0.11.0
 gunicorn==19.7.1
 Celery==4.0.2
+
+asyncpg==0.11.0
+uvloop==0.8.0
 
 requests==2.14.2
 beautifulsoup4==4.6.0

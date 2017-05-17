@@ -4,6 +4,9 @@ import pymysql
 from src.service.config import SQLConfig
 
 
+# from src.service.model.connection_async import async_conn
+
+
 class DataBase:
     uri = SQLConfig.SQLALCHEMY_DATABASE_URI
 
@@ -25,17 +28,23 @@ def register_db_connection(app):
     else:
         print(database_uri)
 
-# connection ~ = db.session (db = db = SQLAlchemy())
-conn = DataBase().connection()
-
 
 def execute_total(table, filter_sql=None):
     _filter_sql = "" if filter_sql is None else " where " + filter_sql
     _count_sql = "select count(*) from " + table + _filter_sql
-    _listCount = conn.execute(_count_sql)
+
+    _is_async = False
+    if not _is_async:
+        _results = conn.execute(_count_sql)  # RowProxy
+    # else:
+    #    _results = async_conn.execute(_count_sql)  # asyncpg.Record
 
     _total = 0
-    for c in _listCount:
-        _total = c.count
-
+    for item in _results:
+        print(type(item).__name__)
+        _total = item['count'] if 'count' in item else 0
     return _total
+
+
+# connection ~ = db.session (db = db = SQLAlchemy())
+conn = DataBase().connection()
