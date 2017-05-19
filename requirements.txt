@@ -19,4 +19,5 @@ uvloop==0.8.0
 requests==2.14.2
 beautifulsoup4==4.6.0
 lxml==3.7.3
-selenium==3.4.0
+selenium==3.4.1
+Scrapy==1.3.3
