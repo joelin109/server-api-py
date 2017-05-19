@@ -10,7 +10,8 @@ class SQLConfig(object):
     SQLALCHEMY_DATABASE_SQLLite = 'sqlite:///' + file_path  # 'sqlite:////absolute/path/to/foo.db'
     SQLALCHEMY_DATABASE_MySQL = 'mysql://root:my7678@localhost:3306/joerest'
     SQLALCHEMY_DATABASE_PostgreSQL = 'postgresql://postgres:123456@localhost:5432/sqlrest'
-    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL
+    SQLALCHEMY_DATABASE_PostgreSQL_aws = 'postgresql://postgres:joelin502@aws-postgres.c9fs8tttkuhy.us-west-2.rds.amazonaws.com:5432/aws_postgres'
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL_aws
 
 
 class Conf(object):

@@ -175,6 +175,7 @@ class ContentDictionary(BaseModel):
     id = Column(Integer(), primary_key=True)
     wort = Column('wort', String(32), nullable=False, unique=True)
     wort_sex = Column('wort_sex', String(10), nullable=False, default='-', index=True)
+    phonitic = Column('phonitic', String(32), default='')
     plural = Column('plural', String(32), nullable=False, default='-')
     wort_zh = Column('zh', String(50))
     wort_en = Column('en', String(50))
