@@ -114,9 +114,11 @@ def register_blueprint(app):
 
     @app.route('/')
     def index():
-        url = url_for('content.deutsch')  # content_blueprint - home(def)
-        print(url)
-        return redirect(url)
+        # url = url_for('content.deutsch')  # content_blueprint - home(def)
+        # print(url)
+        # return redirect(url)
+        print('flask working')
+        return '<h1>Joe is here</h1>'
 
     app.register_blueprint(home_blueprint, url_prefix='')
     app.register_blueprint(content_blueprint, url_prefix='/content')
