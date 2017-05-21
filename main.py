@@ -1,8 +1,13 @@
 from flask import Flask
-from src.www_setting import WwwConfig
 from src.service.api.api_source import *
 from src.service.model.connection import *
 from src.webhttp.extension import register_extension
+
+
+class WwwConfig(object):
+    DEBUG = True
+    SECRET_KEY = '736670cb10a600b695a55839ca3a5aa54a7d7356cdef815d2ad6e19a2031182b'
+    # Host_Port = 1058
 
 
 def create_app(object_name):
@@ -32,4 +37,5 @@ def after_request(response):
 
 
 if __name__ == '__main__':
-    app.run(host=WwwConfig.Host_URL, port=WwwConfig.Host_Port)
+    app.run()
+    # app.run(host=WwwConfig.Host_URL, port=WwwConfig.Host_Port)

@@ -75,7 +75,7 @@ def deutsch(channel=None):
         print(channel)
 
     if channel is not None:
-        _filters = {'letter': channel, 'sape': 4139, 'page': 1}
+        _filters = {'letter': channel, 'sape': 4139, 'page_size': 100}
         _word_filter = WordListFilter()
         _word_filter.parse(_filters)
 
@@ -114,11 +114,9 @@ def register_blueprint(app):
 
     @app.route('/')
     def index():
-        # url = url_for('content.deutsch')  # content_blueprint - home(def)
-        # print(url)
-        # return redirect(url)
-        print('flask working')
-        return '<h1>Joe is here</h1>'
+        url = url_for('content.deutsch')  # content_blueprint - home(def)
+        print(url)
+        return redirect(url)
 
     app.register_blueprint(home_blueprint, url_prefix='')
     app.register_blueprint(content_blueprint, url_prefix='/content')
