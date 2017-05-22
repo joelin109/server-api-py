@@ -1,0 +1,343 @@
+/*----- Admin Start ----------*/
+
+.root-list-admin-layout {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.admin-table {
+    min-width: 768px;
+    max-width: 1014px;
+    min-height: 1004px;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.admin-table-default {
+    min-width: 1009px;
+    max-width: 1014px;
+    min-height: 1004px;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.admin-list-setting {
+    overflow: hidden;
+    margin: '20px auto 0';
+    max-width: 660px,
+}
+
+.admin-list-col-wo {
+    max-width: 160px;
+    text-align: left;
+}
+
+.admin-list-col-zh {
+    max-width: 250px;
+    min-width: 200px;
+    text-align: left;
+}
+
+.admin-list-col-st {
+    max-width: 180px;
+    text-align: left;
+}
+
+.admin-list-col-50 {
+    max-width: 50px;
+    text-align: left;
+}
+
+.admin-list-col-30 {
+    max-width: 30px;
+    text-align: center;
+}
+
+.itemBox-recommend {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    background: #FAFAFA;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.itemBox-text-box-admin {
+    padding: 20px 10px 5px 10px;
+    min-height: 120px;
+}
+
+.itemBox-text-box-admin a {
+    text-decoration: none;
+    outline: none;
+    color: #484848;
+}
+
+.itemBox-text-box-admin a:hover {
+    color: #455A64;
+}
+
+.itemBox-text-box-admin p {
+    margin-bottom: 0.3em;
+    min-height: 6px;
+}
+
+.itemBox-console-box {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-end;
+    align-items: flex-end;
+    margin-left: 10px;
+    border-top: 1px solid #E0E0E0;
+}
+
+.itemBox-console-box-left {
+    width: 120px;
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-end;
+    align-items: flex-end;
+}
+
+.itemBox-console-box-right {
+    width: 60px;
+    display: flex;
+    justify-content: flex-end;
+    align-content: flex-end;
+    align-items: flex-end;
+}
+
+
+/*----- Admin End ----------*/
+
+
+/*----- Admin Word ----------*/
+
+.draw-detail-root-container-header-admin {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: transparent;
+    height: 45px;
+    max-width: 768px;
+    z-index: 1301;
+}
+
+.draw-detail-root-container {
+    position: absolute;
+    background-color: #616161;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: flex-start;
+    bottom: 0px;
+    top: 0px;
+}
+
+.draw-detail-tab-container {
+    background-color: transparent;
+    width: 100%;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+    padding-top: 0px;
+    margin: 0px 20px 10px 20px;
+}
+
+.draw-detail-editor-container {
+    background-color: transparent;
+    width: 100%;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.draw-detail-tab {
+    background-color: transparent;
+    height: 100%;
+}
+
+.draw-detail-tab-box {
+    background-color: transparent;
+}
+
+.draw-detail-tab-content-basic {
+    background-color: transparent;
+    width: 100%;
+    min-height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.draw-detail-tab-content-basic-box {
+    padding: 6px 6px 60px 10px;
+    width: 100%;
+    max-width: 768px;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 3px;
+    margin-bottom: 180px;
+}
+
+.draw-detail-tab-content-editor {
+    background-color: transparent;
+    padding-top: 0px;
+    padding-bottom: 6px;
+    width: 100%;
+}
+
+.draw-detail-tab-content-editor-box {
+    width: 100%;
+    max-width: 768px;
+    min-height: 660px;
+    background: white;
+    border-top: 0px solid #E0E0E0;
+    border-right: 2px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+    border-left: 1px solid E0E0E0;
+    border-radius: 2px;
+}
+
+.draw-detail-tab-content-html-box {
+    position: absolute;
+    padding-top: 0px;
+    min-height: 660px;
+    width: 100%;
+    max-width: 768px;
+    border-radius: 3px;
+}
+
+.demo-content {
+    padding: 10px 10px 10px 10px;
+    width: 100%;
+    height: 100%;
+    max-width: 746px;
+    border-radius: 3px;
+    font-size: 15px;
+    font-size: 1.25rem;
+    line-height: 25px;
+    font-family: Verdana;
+    min-height: 660px;
+    background: white;
+}
+
+.draw-detail-tab-content-preview {
+    background-color: transparent;
+    width: 100%;
+    max-width: 768px;
+    display: flex;
+    justify-content: center;
+}
+
+.draw-detail-tab-content-preview-box {
+    min-width: 750px;
+    padding: 6px 8px 10px 8px;
+    min-height: 660px;
+    width: 100%;
+    background: white;
+    border: 1px solid #E0E0E0;
+    border-radius: 3px;
+}
+
+.draw-content-box {
+    height: 180px;
+    padding: 6px 6px 0px 25px;
+}
+
+.draw-content-text-title {
+    font-size: 15px;
+    font-size: 1.25rem;
+    line-height: 15px;
+    color: #424242;
+}
+
+.draw-content-check-regel {
+    max-height: 40px;
+    max-width: 120px;
+    margin-left: 0px;
+    margin-right: 50px;
+    justify-content: flex-start;
+    align-items: flex-end;
+    align-content: flex-end;
+}
+
+
+/*----- Admin Word End ----------*/
+
+.slds-modal {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: -webkit-transform 0.1s linear, opacity 0.1s linear;
+    transition: transform 0.1s linear, opacity 0.1s linear;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9001;
+}
+
+.slds-modal__container {
+    position: relative;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    -webkit-transition: -webkit-transform 0.1s linear, opacity 0.1s linear;
+    transition: transform 0.1s linear, opacity 0.1s linear;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 2rem;
+    height: 100%;
+    padding: 3rem 0;
+    border-radius: 0.25rem;
+}
+
+@media (min-width: 48em) {
+    .slds-modal__container {
+        margin: 0 auto;
+        width: 50%;
+        max-width: 40rem;
+        min-width: 20rem;
+    }
+}
+
+.demo-toolbar {
+    width: 100%;
+    max-width: 766px;
+}
+
+.demo-wrapper {
+    width: 600px;
+    display: block;
+    margin-bottom: 50px;
+    height: 450px;
+}
+
+.demo-editor {
+    height: 100%;
+    max-width: 756px;
+    padding: 0px 5px 5px 5px;
+    width: 100%;
+    min-height: 590px;
+}
