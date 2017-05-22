@@ -40,6 +40,24 @@ def api_response_format(result_list=None, page=None):
         print('api_response_format - finally - Done')
 
 
+def api_response_format_err(reason):
+    try:
+        _response = {
+            "code": 0,
+            "desc": "failure",
+            "resource": SQLConfig.SQLALCHEMY_DATABASE_URI.split(":")[0],
+            "result": [],
+            "error": reason
+        }
+        return _response
+
+    except:
+        return {"error": "........"}
+        raise
+    finally:
+        print('api_response_format - finally - Done')
+
+
 def api_response_detail_format(result=None):
     try:
         _response = {

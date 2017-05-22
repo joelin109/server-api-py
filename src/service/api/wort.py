@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
 from src.service.model.model_content import ContentDictionary
-from src.service.api.util import api_response_format, api_response_detail_format,  api_request_parse
+from src.service.api.util import api_response_format, api_response_detail_format, api_response_format_err,  api_request_parse
 from src.service.logic.dictionary_logic import DictionaryLogic, WordListFilter
 
 
@@ -25,9 +25,15 @@ class WortListApi(Resource):
         _request_data = api_request_parse()
 
         _list_filter = _get_request_data_filter(_request_data)
-        _logic = DictionaryLogic()
-        _result_list, _page = _logic.get_list(_list_filter)
-        return api_response_format(_result_list, _page)
+        try:
+            _list_filter = _get_request_data_filter(_request_data)
+            _logic = DictionaryLogic()
+            _result_list, _page = _logic.get_list(_list_filter)
+            return api_response_format(_result_list, _page)
+
+        except RuntimeError as ex:
+            print(ex)
+            return api_response_format_err(str(ex))
 
 
 def _response_result(_post_wort):

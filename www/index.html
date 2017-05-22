@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>React + API</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="asset/img/favi.ico"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="asset/css/style.css" rel="stylesheet" type="text/css">
+    <link href="asset/css/style-index.css" rel="stylesheet" type="text/css">
+
+    <script>
+        const app_Theme_Primary_Color = '#317298'
+        const app_Theme_Secondary_Color = '#00ACAC';//#00AEEF';
+        const app_Theme_Floating_Color = '#ff7277'
+        const app_API_Http_URL = "http://www.belgianbeerexplorer.com";
+
+        var WebFontConfig = {
+            google: {
+                families: ['Roboto:400,300,500:latin']
+            }
+        };
+
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
 </head>
+
 <body>
 
+    <div id="main" class="body-main"></div>
+
+    <div class="footer">
+        <div>
+            Built by <a href="https://github.com/joelin109" class="quiet">@Joe</a> with
+            <a href="http://facebook.github.io/react/" class="quiet">React</a>,
+            <a href="http://nodejs.org/" class="quiet">Node.js</a> and <a href="http://www.postgresql.org/" class="quiet">Postgres SQL</a>.
+        </div>
+
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.5.0/react.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.5.0/react-dom.min.js'></script>
+    <script src="index.bundle.js"></script>
+
 </body>
+
 </html>

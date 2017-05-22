@@ -20,7 +20,7 @@ admin_blueprint = Blueprint(
 
 @home_blueprint.route('/home')
 def home(page=1):
-    return render_template('content/base.html')
+    return render_template('templates/content/base.html')
 
 
 @home_blueprint.route('/user/<string:post_id>')
@@ -31,7 +31,7 @@ def user(post_id):
         print(user_detail.username)
 
     return render_template(
-        'content/user.html',
+        'templates/content/user.html',
         user=user_detail,
         posts=post,
         recent={},
@@ -51,7 +51,7 @@ def home(page=1):
     user_detail, post = user_details(page)
     print(user_details)
     return render_template(
-        'content/home.html',
+        'templates/content/home.html',
         posts={},
         recent={},
         top_tags={}
@@ -60,7 +60,7 @@ def home(page=1):
 
 @content_blueprint.route('/<int:page>')
 def article(page=1):
-    return render_template('content/base.html')
+    return render_template('templates/content/base.html')
 
 
 # /content/deutsch/list?srch=b
@@ -84,9 +84,10 @@ def deutsch(channel=None):
         _word_list, _page = _logic.get_list(_word_filter)
     except Exception as ex:
         log_traceback(ex)
+        _word_list = []
 
     return render_template(
-        'content/deutsch.html',
+        'templates/content/deutsch.html',
         words=_word_list,
         recent={},
         top_tags={}
@@ -112,11 +113,12 @@ def register_blueprint(app):
     def test():
         return render_template('react/index.html')
 
-    @app.route('/')
-    def index():
-        url = url_for('content.deutsch')  # content_blueprint - home(def)
-        print(url)
-        return redirect(url)
+    # @app.route('/')
+    # def index():
+    #   return render_template('index.html')
+        # url = url_for('content.deutsch')  # content_blueprint - home(def)
+        # print(url)
+        # return redirect(url)
 
     app.register_blueprint(home_blueprint, url_prefix='')
     app.register_blueprint(content_blueprint, url_prefix='/content')
@@ -150,6 +152,6 @@ def register_add_url_rule(app):
 def register_templates_and_static(app):
     _template_path = jinja2.ChoiceLoader([
         app.jinja_loader,
-        jinja2.FileSystemLoader('www/templates'),
+        jinja2.FileSystemLoader('www'),
     ])
     app.jinja_loader = _template_path
