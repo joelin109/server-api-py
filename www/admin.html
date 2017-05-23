@@ -17,20 +17,11 @@
         const app_Theme_Secondary_Color = '#E0E0E0'//'#00ACAC';//#00AEEF';
         const app_Theme_Floating_Color = '#ff7277'//#00ACAC'; //##ff7277
 
-        const app_API_Http_URL = 'http://52.221.45.133/' // 'http://52.221.45.133:8000/';
+        const app_Base_Url = window.location.origin;
+        const app_API_Http_URL = app_Base_Url; // 'http://52.221.45.133:8000/';
         const baseAPI_HTTP_BodyData = {
             "filter":{"letter":"", "page":2, "page_num":1, "page_size": 18},
-            "Word": "besichtigen",
-            "Sex": "",
-            "Level": "A",
-            "Type": "",
-            "Plural": "",
-            "Synonym": "",
-            "Word_Zh": "参观",
-            "Word_En": "",
-            "Konjugation": "",
-            "isRegel": 1,
-            "isRecommend": 0
+            "Word": "besichtigen"
         };
     </script>
 </head>
@@ -38,7 +29,6 @@
 <body>
 
     <div id="main" class="body-main"></div>
-
     <script src="admin.bundle.js"></script>
 
 </body>
