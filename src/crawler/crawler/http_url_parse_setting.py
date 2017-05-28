@@ -59,6 +59,11 @@ class HttpURlParse:
         if _base_url.find('www.washingtonpost.com') > 0:
             self.html_parse_body_tag = 'article-article-body'
 
+        if _base_url.find('www.pornhub.com') > 0:
+            self.html_parse_body_tag = 'original'
+            self.will_del_h5_tags = ['figcaption', 'aside', 'video']
+        # mediaDefinitions   |       .mp4?ttl=
+
     def display(self):
         print(self.url + '  |  ' + self.html_parse_body_tag)
         print(self.will_del_div_tags)
