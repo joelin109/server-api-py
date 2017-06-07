@@ -4,7 +4,7 @@ import io
 from PIL import Image
 
 ACCESS_KEY_ID = 'AKIAJQCZ2HHQ46Q2IAZA'
-ACCESS_SECRET_KEY = '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'
+ACCESS_SECRET_KEY = ''
 
 
 class AwsS3(object):
