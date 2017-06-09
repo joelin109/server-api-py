@@ -73,8 +73,12 @@ def install():
         print('Already have env.')
 
     if _virtualenv:
+        # deactivate
         with prefix('source env/bin/activate'):
             result = local('pip install -r requirements.txt')
+
+            # psycopg2==2.7.1
+            # Scrapy==1.4.0
             if result.succeeded:
                 local('pip install psycopg2')
                 local('pip install scrapy')

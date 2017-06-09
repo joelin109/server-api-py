@@ -22,7 +22,6 @@ selenium==3.4.2
 
 uwsgi==2.0.15
 gunicorn==19.7.1
-Fabric3==1.13.1.post1
 
 boto3==1.4.4
 Pillow==4.1.1
