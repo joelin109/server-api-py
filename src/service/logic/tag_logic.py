@@ -6,7 +6,7 @@ tag_dict = {}
 
 
 def request_article_tags():
-    with open('setting_static_data.json', encoding='utf-8') as json_file:
+    with open('src/sql_static_data.json', encoding='utf-8') as json_file:
         _json_data = json.loads(json_file.read())
         _result_tags = _json_data['result']['tags']
 

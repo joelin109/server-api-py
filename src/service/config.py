@@ -11,7 +11,7 @@ class SQLConfig(object):
     SQLALCHEMY_DATABASE_MySQL = 'mysql://root:my7678@localhost:3306/joerest'
     SQLALCHEMY_DATABASE_PostgreSQL = 'postgresql://postgres:123456@localhost:5432/sqlrest'
     SQLALCHEMY_DATABASE_PostgreSQL_aws = 'postgresql://postgres:joelin502@aws-postgres.c35dsckzatca.ap-southeast-1.rds.amazonaws.com:5432/api_postgres'
-    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL_aws
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL
 
 
 class Conf(object):
