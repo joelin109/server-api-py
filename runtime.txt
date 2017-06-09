@@ -1,3 +1,0 @@
-# For Heroku deploy
-python-3.6.0
-

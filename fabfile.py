@@ -3,6 +3,7 @@ from fabric.contrib.files import *
 import os
 
 
+# fab kill/start
 def start():
     kill()
     with settings(warn_only=True):
@@ -15,20 +16,23 @@ def start():
 
 # ps aux | grep uwsgi      :  ps -ef | grep uwsgi
 # pkill -f uwsgi -9        :         killall -9 uwsgi
+# port is not available after run uwsgi, should visit from nginx
 def uwsgi():
     with warn_only():
         local('pkill -f uwsgi -9')
 
-    local('uwsgi uwsgi.ini')
+    local('uwsgi conf/uwsgi.ini')
 
 
 # ps aux |grep gunicorn      :     ps -ef | grep gunicorn    : pkill -f gunicorn -9
+# port is available after run gunicorn
 def gunic():
     with settings(warn_only=True):
         result = local('pkill -f gunicorn -9')
         print(result.succeeded)
 
-    _exec = 'gunicorn -w 3 -b 0.0.0.0:8000 main:app'
+    # _exec = 'gunicorn -w 3 -b 127.0.0.1:8000 main:app'
+    _exec = 'gunicorn main:app - c conf/gunicorn.conf'
     with settings(warn_only=True):
         result = local(_exec)
 
