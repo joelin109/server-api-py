@@ -32,6 +32,7 @@ def gunic():
         print(result.succeeded)
 
     # _exec = 'gunicorn -w 3 -b 127.0.0.1:8000 main:app'
+    # -b BIND, --bind=BIND,  -c CONFIG, --config=CONFIG
     _exec = 'gunicorn main:app - c conf/gunicorn.conf'
     with settings(warn_only=True):
         result = local(_exec)
