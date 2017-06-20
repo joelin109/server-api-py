@@ -8,14 +8,14 @@ Flask-Principal==0.4.0
 Flask-WTF==0.14.2
 Flask-Celery-Helper==1.1.0
 
-SQLAlchemy==1.1.9
+SQLAlchemy==1.1.10
 PyMySQL==0.7.11
 Celery==4.0.2
 asyncpg==0.11.0
 uvloop==0.8.0
 # psycopg2==2.7.1
 
-requests==2.17.3
+requests==2.18.1
 beautifulsoup4==4.6.0
 lxml==3.8.0
 selenium==3.4.3

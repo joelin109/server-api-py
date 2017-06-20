@@ -2,8 +2,14 @@ from fabric.api import local, run, warn_only, settings, prefix
 from fabric.contrib.files import *
 import os
 
+'''
+$ fab install
 
-# fab kill/start
+$ fab kill
+$ fab start
+'''
+
+
 def start():
     kill()
     with settings(warn_only=True):
@@ -59,7 +65,7 @@ def kill():
         else:
             print('non gunicorn process')
 
-    # if exists('env/'):
+            # if exists('env/'):
 
 
 def install():
