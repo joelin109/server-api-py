@@ -1,4 +1,3 @@
-fabric3
 virtualenv==15.1.0
 ansible==2.3.1.0
 uwsgi==2.0.15
