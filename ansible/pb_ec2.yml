@@ -28,6 +28,12 @@
       when: git_pull|success
 
 
+    - debug: msg="item.item={{item}}"
+      when: "{{item.find('requirements') >= 0}}"
+      ignore_errors: True
+      with_items: "{{git_ls.stdout_lines}}"
+
+
     - name: pip3
       shell: pip3 -V
       register: pip3_python
