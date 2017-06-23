@@ -1,0 +1,27 @@
+# ansible-playbook ansible/pb_ec2.yml
+
+- hosts: aws_ec2
+  become_user: root
+  gather_facts: false
+
+  vars:
+    ansible_ssh_private_key_file: /Volumes/Mac-TBD/Server/aws-ec2/sing-ub-py.pem
+    git_project_path: /home/ubuntu/api36/server-api-py
+    uwsgi_port: 88
+
+  tasks:
+    - name: Check git file list
+      shell: chdir={{git_project_path}} ls -a
+      register: git_ls
+
+    - name: Display file list from git
+      debug: msg="{{ git_ls.stdout_lines }}"
+      when: git_ls|success
+
+
+    - name: pip3
+      shell: python3.6 -V
+      register: pip3_python
+
+    - debug: msg="{{ pip3_python.stdout_lines }}"
+
