@@ -1,0 +1,34 @@
+# ansible-playbook ansible/pb_local_deploy.yml
+
+- hosts: local
+  remote_user: root
+
+
+  vars:
+    git_project_path: /Volumes/Mac-TBD/Server/Python/server-api-py
+    uwsgi_port: 8080
+
+
+  tasks:
+    - name: Chomd .pem file
+      command : chdir={{ssh_path}} chmod 400 {{ssh_pem_file}}
+      register: ssh_pem_file_result
+
+    - debug: msg="{{ ssh_pem_file.stdout_lines }}"
+      when: ssh_pem_file_result|failed
+
+    - name: Connect to ec2 instance using public DNS
+      command : chdir={{ssh_path}} ssh -i "{{ssh_pem_file}}" ubuntu@{{ssh_ec2_ip}}
+      register: connect_ec2
+      when: ssh_pem_file_result|success
+
+    - name: Connect success!
+      debug: msg="{{ connect_ec2.stdout_lines }}"
+      when: connect_ec2|success
+
+
+    - name: test
+      shell: pip3 -V
+      register: ec2_python
+
+    - debug: msg="{{ ec2_python.stdout_lines }}"

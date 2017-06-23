@@ -20,9 +20,6 @@ beautifulsoup4==4.6.0
 lxml==3.8.0
 selenium==3.4.3
 
-uwsgi==2.0.15
-gunicorn==19.7.1
-
 boto3==1.4.4
 Pillow==4.1.1
 
