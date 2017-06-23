@@ -3,9 +3,13 @@ from fabric.contrib.files import *
 import os
 
 '''
-$ fab kill
+$ python3.6 -m pip install fabric3
+$ fab install:ops |   fab install  |   fab start:dev
+
+
 $ fab start
 $ fab start:dev
+$ fab kill
 $ fab gunic
 '''
 
@@ -31,7 +35,10 @@ def uwsgi(mode='production'):
     if mode == 'production':
         local('uwsgi conf/uwsgi.ini')
     else:
-        local('uwsgi conf/uwsgi_dev.ini')
+        with settings(warn_only=True):
+            result = local('uwsgi conf/uwsgi_dev.ini')
+            if result.failed:
+                print('Run uwsgi failed.')
 
 
 # ps aux |grep gunicorn      :     ps -ef | grep gunicorn    : pkill -f gunicorn -9
@@ -44,12 +51,24 @@ def gunic():
     # _exec = 'gunicorn -w 3 -b 127.0.0.1:8000 main:app'
     # -b BIND, --bind=BIND,  -c CONFIG, --config=CONFIG
     _exec = 'gunicorn main:app - c conf/gunicorn.conf'
+
+    with prefix('source env/bin/activate'):
+        with settings(warn_only=True):
+            result = local(_exec)
+
+            if result.failed:
+                print('Run gunicorn failed.')
+
+
+def reload(app='postgres'):
     with settings(warn_only=True):
-        result = local(_exec)
+        local('killall Postgres')
+
+    with settings(warn_only=True):
+        result = local('open -a  Postgres')
 
         if result.failed:
-            with prefix('source env/bin/activate'):
-                local(_exec)
+            print('open postgres failed.')
 
 
 def kill():
@@ -109,7 +128,7 @@ def _pip_install_ops():
 
 def _pip_install():
     _virtualenv = True
-    if os.path.isdir('env/') is not True:
+    if os.path.isdir('env/bin/') is not True:
         with settings(warn_only=True):
             result = local('virtualenv env')
             _virtualenv = result.succeeded
@@ -123,11 +142,8 @@ def _pip_install():
         with prefix('source env/bin/activate'):
             result = local('pip install -r requirements.txt')
 
-            # psycopg2==2.7.1
-            # Scrapy==1.4.0
             if result.succeeded:
-                local('pip install psycopg2')
-                local('pip install scrapy')
+                local('pip install -r requirements_next.txt')
 
 
 def ec2():

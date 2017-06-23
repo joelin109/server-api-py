@@ -1,0 +1,7 @@
+psycopg2==2.7.1
+Scrapy==1.4.0
+gunicorn==19.7.1
+
+
+
+
