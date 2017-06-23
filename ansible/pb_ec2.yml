@@ -18,9 +18,18 @@
       debug: msg="{{ git_ls.stdout_lines }}"
       when: git_ls|success
 
+    - name: Git pull
+      shell: chdir={{git_project_path}} git pull
+      sudo: yes
+      register: git_pull
+
+    - name: Display latest file list from git
+      debug: msg="{{ git_pull.stdout_lines }}"
+      when: git_pull|success
+
 
     - name: pip3
-      shell: python3.6 -V
+      shell: pip3 -V
       register: pip3_python
 
     - debug: msg="{{ pip3_python.stdout_lines }}"
