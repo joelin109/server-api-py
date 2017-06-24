@@ -27,20 +27,23 @@
       debug: msg="{{ git_pull.stdout_lines }}"
       when: git_pull|success
 
-    - name: Whether need re-install python package?
+    - name: Project python package changed? need pip install...!
       shell: chdir={{git_project_path}} cat requirements.txt
       when: git_pull.stdout.find('requirements') >= 0
-      register: requirements_txt
-
-    - name:  Display requirements file
-      debug: msg="{{requirements_txt.stdout_lines}}, pip install..."
-      when:  git_pull.stdout.find('requirements') >= 0
       notify:
-        - handler pip install
+        - handler_pip_install
+      register: requirements_txt
       ignore_errors: True
 
-    - debug: msg="item.item={{git_pull.stdout}}, do nothing"
-      when: git_pull.stdout.find('Already up-to-date') >= 0
+    - name:  Display python package if changed!
+      debug: msg="{{ requirements_txt.stdout_lines }}"
+      when:  git_pull.stdout.find('requirements') >= 0
+
+    - name:  Project file changed? need restart server!
+      debug: msg="{{git_pull.stdout}}"
+      when: git_pull.stdout.find('Already up-to-date') < 0
+      notify:
+        - handler_restart_api
       ignore_errors: True
 
     - name: pip3
@@ -51,7 +54,11 @@
 
 
   handlers:
-     - name: handler pip install
+     - name: handler_pip_install
+       shell: chdir={{git_project_path}} fab install
+       sudo: yes
+
+     - name: handler_restart_api
        shell: pip3 -V
 
 
