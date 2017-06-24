@@ -27,16 +27,33 @@
       debug: msg="{{ git_pull.stdout_lines }}"
       when: git_pull|success
 
+    - name: Whether need re-install python package?
+      shell: chdir={{git_project_path}} cat requirements.txt
+      when: git_pull.stdout.find('requirements') >= 0
+      register: requirements_txt
 
-    - debug: msg="item.item={{item}}"
-      when: "{{item.find('requirements') >= 0}}"
+    - name:  Display requirements file
+      debug: msg="{{requirements_txt.stdout_lines}}, pip install..."
+      when:  git_pull.stdout.find('requirements') >= 0
+      notify:
+        - handler pip install
       ignore_errors: True
-      with_items: "{{git_ls.stdout_lines}}"
 
+    - debug: msg="item.item={{git_pull.stdout}}, do nothing"
+      when: git_pull.stdout.find('Already up-to-date') >= 0
+      ignore_errors: True
 
     - name: pip3
       shell: pip3 -V
       register: pip3_python
 
     - debug: msg="{{ pip3_python.stdout_lines }}"
+
+
+  handlers:
+     - name: handler pip install
+       shell: pip3 -V
+
+
+
 
