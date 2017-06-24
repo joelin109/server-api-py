@@ -1,0 +1,42 @@
+# ansible-playbook ansible/pb_api_reload.yml
+
+- hosts: local
+  remote_user: root
+
+
+  vars:
+    git_project_path: "{{deploy_project_path}}/{{git_repository_name}}"
+  vars_files:
+    - vars/local.yml
+
+
+  tasks:
+    - name: Kill nginx
+      shell : pkill -f nginx -9
+      ignore_errors: True
+
+    - name: Kill uwsgi
+      shell : pkill -f uwsgi -9
+      register: kill_uwsgi_result
+      ignore_errors: True
+
+    - name: Kill gunicorn
+      shell : pkill -f gunicorn -9
+      when: kill_uwsgi_result|success
+      ignore_errors: True
+
+
+    - name: Run nginx
+      shell : nginx
+      register: run_nginx_result
+      notify:
+        - handler_run_gunic
+      ignore_errors: True
+
+
+  handlers:
+     - name: handler_run_uwsgi
+       command: uwsgi ./../conf/{{uwsgi_file}}
+
+     - name: handler_run_gunic
+       command: chdir={{git_project_path}} gunicorn main:app - c conf/gunicorn.conf

@@ -1,0 +1,54 @@
+# ansible-playbook ansible/pb_local_update.yml
+
+- hosts: local
+  become_user: root
+  gather_facts: false
+
+
+  vars:
+    git_project_path: "{{deploy_project_path}}/{{git_repository_name}}"
+
+
+  tasks:
+    - name: include variables
+      include_vars: vars/local.yml
+
+    - name: Check git file list
+      shell: chdir={{git_project_path}} ls -a
+      register: git_ls
+
+    - name: Display file list from git
+      debug: msg="{{ git_ls.stdout_lines }}"
+      when: git_ls|success
+
+    - name: Project python package changed? need pip install...!
+      shell: chdir={{git_project_path}} cat requirements.txt
+      when: git_ls.stdout.find('requirements') >= 0
+      register: requirements_txt
+      ignore_errors: True
+
+    - name: pip_install
+      pip:
+        virtualenv: "{{git_project_path}}/env"
+        virtualenv_python: python3.6
+        requirements: "{{git_project_path}}/requirements.txt"
+      when: git_ls.stdout.find('requirements') >= 0
+      ignore_errors: True
+      register: pip_install_result
+      notify:
+        - handler_pip_install_result
+
+    - name: pip3
+      shell: pip3 -V
+      register: pip3_python
+
+    - debug: msg="{{ pip_install_result.stdout_lines }}"
+
+
+  handlers:
+     - name: handler_pip_install_result
+       debug: msg="{{pip_install_result.stdout_lines}}"
+
+     - name: handler_restart_api
+       shell: chdir={{git_project_path}} fab start
+       sudo: yes

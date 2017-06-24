@@ -1,0 +1,4 @@
+deploy_project_path: /Volumes/Mac-TBD/Server/Python
+git_repository_name: server-api-py
+uwsgi_file: uwsgi_dev.ini
+uwsgi_port: 8080

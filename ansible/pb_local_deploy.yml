@@ -5,8 +5,9 @@
 
 
   vars:
-    git_project_path: /Volumes/Mac-TBD/Server/Python/server-api-py
-    uwsgi_port: 8080
+    git_project_path: "{{deploy_project_path}}/{{git_repository_name}}"
+  vars_files:
+    - vars/local.yml
 
 
   tasks:

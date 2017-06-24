@@ -74,13 +74,13 @@ def reload(app='postgres'):
 def kill():
     # '/usr/local/etc/nginx/nginx.conf'
     with settings(warn_only=True):
-        result_nginx = run('pkill -f nginx -9')
+        result_nginx = local('pkill -f nginx -9')
 
     with settings(warn_only=True):
-        result_uwsgi = run('pkill -f uwsgi -9')
+        result_uwsgi = local('pkill -f uwsgi -9')
 
     with settings(warn_only=True):
-        result_guni = run('pkill -f gunicorn -9')
+        result_guni = local('pkill -f gunicorn -9')
 
     if result_nginx.failed:
         print('non-uwsgi process')

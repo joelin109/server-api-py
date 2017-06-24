@@ -1,0 +1,4 @@
+deploy_project_path: /home/ubuntu/api36
+git_repository_name: server-api-py
+uwsgi_file: uwsgi.ini
+uwsgi_port: 88

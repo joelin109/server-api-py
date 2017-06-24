@@ -6,8 +6,9 @@
 
   vars:
     ansible_ssh_private_key_file: /Volumes/Mac-TBD/Server/aws-ec2/sing-ub-py.pem
-    git_project_path: /home/ubuntu/api36/server-api-py
-    uwsgi_port: 88
+    git_project_path: "{{deploy_project_path}}/{{git_repository_name}}"
+  vars_files:
+    - vars/ec2.yml
 
   tasks:
     - name: Check git file list
@@ -32,6 +33,7 @@
       when: git_pull.stdout.find('requirements') >= 0
       notify:
         - handler_pip_install
+        - handler_pip_install_next
       register: requirements_txt
       ignore_errors: True
 
@@ -55,8 +57,16 @@
 
   handlers:
      - name: handler_pip_install
-       shell: chdir={{git_project_path}} fab install
-       sudo: yes
+       pip:
+        virtualenv: "{{git_project_path}}/env"
+        virtualenv_python: python3.6
+        requirements: "{{git_project_path}}/requirements.txt"
+
+     - name: handler_pip_install_next
+       pip:
+        virtualenv: "{{git_project_path}}/env"
+        virtualenv_python: python3.6
+        requirements: "{{git_project_path}}/requirements_next.txt"
 
      - name: handler_restart_api
        shell: chdir={{git_project_path}} fab start
