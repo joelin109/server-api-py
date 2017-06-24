@@ -59,7 +59,8 @@
        sudo: yes
 
      - name: handler_restart_api
-       shell: pip3 -V
+       shell: chdir={{git_project_path}} fab start
+       sudo: yes
 
 
 
