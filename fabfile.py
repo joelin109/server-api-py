@@ -168,3 +168,11 @@ def ec2():
                     print('dfdsfdsf')
                     _ec2_result = run('python -V ')
                     print(_ec2_result)
+
+
+def ansible():
+    with settings(warn_only=True):
+        result = local('ansible-playbook ansible/pb_ec2.yml')
+
+        if result.succeeded:
+            ec2()

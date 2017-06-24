@@ -1,0 +1,20 @@
+    - name: Kill nginx
+      shell : pkill -f nginx -9
+      register: kill_nginx_result
+      ignore_errors: True
+
+    - name: Kill uwsgi
+      shell : pkill -f uwsgi -9
+      register: kill_uwsgi_result
+      ignore_errors: True
+
+    - name: Kill gunicorn
+      shell : pkill -f gunicorn -9
+      # when: kill_uwsgi_result|success
+      ignore_errors: True
+
+    - name: Run nginx
+      shell : nginx
+      # when: kill_nginx_result|success
+      register: run_nginx_result
+      ignore_errors: True

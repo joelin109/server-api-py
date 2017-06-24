@@ -42,17 +42,17 @@
       when:  git_pull.stdout.find('requirements') >= 0
 
     - name:  Project file changed? need restart server!
-      debug: msg="{{git_pull.stdout}}"
+      debug: msg="{{git_pull.stdout_lines}}"
       when: git_pull.stdout.find('Already up-to-date') < 0
       notify:
         - handler_restart_api
       ignore_errors: True
 
-    - name: pip3
-      shell: pip3 -V
-      register: pip3_python
+    - include: task/service_reload.yml
+      when: git_pull.stdout.find('Already up-to-date') >= 0
+      ignore_errors: True
 
-    - debug: msg="{{ pip3_python.stdout_lines }}"
+    - debug: msg="{{ git_project_path }}"
 
 
   handlers:
