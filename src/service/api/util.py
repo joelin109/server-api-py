@@ -1,5 +1,12 @@
 from src.service.config import SQLConfig
 from flask_restful import reqparse
+from enum import Enum
+
+
+class Http(Enum):
+    Request = 0
+    Response = 1
+    Response_detail = 2
 
 
 # @staticmethod

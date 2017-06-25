@@ -1,6 +1,7 @@
 # ansible-playbook ansible/pb_ec2.yml
 
 - hosts: aws_ec2
+  become: true
   become_user: root
   gather_facts: false
 
@@ -24,7 +25,7 @@
       sudo: yes
       register: git_pull
 
-    - name: Display latest file list from git
+    - name: Display git pull result...
       debug: msg="{{ git_pull.stdout_lines }}"
       when: git_pull|success
 
@@ -41,15 +42,39 @@
       debug: msg="{{ requirements_txt.stdout_lines }}"
       when:  git_pull.stdout.find('requirements') >= 0
 
-    - name:  Project file changed? need restart server!
-      debug: msg="{{git_pull.stdout_lines}}"
+
+    - name:  Get system current path...!
+      shell: pwd
+      register: sys_path_result
+
+    - name:  Get system current user name...
+      shell: echo $USER
+      register: sys_user_result
+
+    - name:  Display system current path & user name...
+      debug: msg="{{ sys_path_result.stdout,  sys_user_result.stdout}}"
+
+    - name:  Deploy setting files if code changed. Then restart server!
+      template:
+        src: "./uwsgi.ini"
+        dest: "api_ops/"
+        mode: 0644
+        remote_src: yes
       when: git_pull.stdout.find('Already up-to-date') < 0
-      notify:
-        - handler_restart_api
       ignore_errors: True
 
+    - name: Cat uwsgi.ini...!
+      shell: cat api_ops/uwsgi.ini
+      when: git_pull.stdout.find('Already up-to-date') < 0
+      ignore_errors: True
+      register: uwsgi_ini
+      notify:
+        - handler_uwsgi_ini
+        - handler_restart_nginx
+
     - include: task/service_reload.yml
-      when: git_pull.stdout.find('Already up-to-date') >= 0
+      when: git_pull.stdout.find('Already up-to-date') < 0
+      sudo: yes
       ignore_errors: True
 
     - debug: msg="{{ git_project_path }}"
@@ -68,10 +93,10 @@
         virtualenv_python: python3.6
         requirements: "{{git_project_path}}/requirements_next.txt"
 
-     - name: handler_restart_api
-       shell: chdir={{git_project_path}} fab start
+     - name: handler_uwsgi_ini
+       debug: msg="{{ uwsgi_ini.stdout_lines }}"
+
+     - name: handler_restart_nginx
+       service: name=nginx state=started enabled=yes
+       ignore_errors: True
        sudo: yes
-
-
-
-
