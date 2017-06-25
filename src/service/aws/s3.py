@@ -5,7 +5,7 @@ from PIL import Image
 from datetime import datetime
 
 ACCESS_KEY_ID = 'AKIAJWJDPKGTHBNSWG2Q'
-ACCESS_SECRET_KEY = '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'
+ACCESS_SECRET_KEY = ''
 
 
 class AwsS3(object):
