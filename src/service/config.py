@@ -6,11 +6,12 @@ class SQLConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
-    file_path = os.path.join(os.path.dirname(__file__) + '/../db/sqlrest.db')
+    aws_rds_ip = 'aws-postgres.c35dsckzatca.ap-southeast-1.rds.amazonaws.com'
+    file_path = os.path.join(os.path.dirname(__file__) + '/../db/api_sqlite.db')
     SQLALCHEMY_DATABASE_SQLLite = 'sqlite:///' + file_path  # 'sqlite:////absolute/path/to/foo.db'
     SQLALCHEMY_DATABASE_MySQL = 'mysql://root:my7678@localhost:3306/joerest'
     SQLALCHEMY_DATABASE_PostgreSQL = 'postgresql://postgres:123456@localhost:5432/sqlrest'
-    SQLALCHEMY_DATABASE_PostgreSQL_aws = 'postgresql://postgres:joelin502@aws-postgres.c35dsckzatca.ap-southeast-1.rds.amazonaws.com:5432/api_postgres'
+    SQLALCHEMY_DATABASE_PostgreSQL_aws = 'postgresql://postgres:joelin502@%s:5432/api_postgres' % aws_rds_ip
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_PostgreSQL_aws
 
 
