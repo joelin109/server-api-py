@@ -146,7 +146,24 @@ def _pip_install():
                 local('pip install -r requirements_next.txt')
 
 
+'''
+
+# Connect to ec2, then update... 
+
+$ fab ec2
+
+$ fab update
+$ fab update:1
+
+
+'''
+
+
 def ec2():
+    _connect_ec2()
+
+
+def _connect_ec2():
     _ssh_ec2_local_path = '/Volumes/Mac-TBD/Server/aws-ec2'
     _ssh_ec2_pem_file = 'sing-ub-py.pem'
     _ssh_ec2 = 'ec2-52-221-45-133.ap-southeast-1.compute.amazonaws.com'
@@ -170,9 +187,10 @@ def ec2():
                     print(_ec2_result)
 
 
-def ansible():
+# fab update  | fab update:1
+def update(will_login=False):
     with settings(warn_only=True):
         result = local('ansible-playbook ansible/pb_ec2.yml')
 
-        if result.succeeded:
-            ec2()
+        if result.succeeded and will_login:
+            _connect_ec2()
