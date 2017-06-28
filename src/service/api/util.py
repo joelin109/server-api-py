@@ -40,7 +40,7 @@ class Api(Resource):
         _performance = {
             "http_start": self.http_start_time.strftime('%m-%d %H:%M:%S_%f'),
             "http_end": _request_end_time.strftime('%m-%d %H:%M:%S_%f'),
-            "http_use": '%s.%s s' % (_request_gap.seconds, _request_gap.microseconds // 1000)
+            "http_use": '%s s' % (_request_gap.seconds + (_request_gap.microseconds // 1000)/1000)
         }
         return _performance
 
