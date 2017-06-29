@@ -64,6 +64,10 @@ class HttpURlParse:
             self.will_del_h5_tags = ['figcaption', 'aside', 'video']
         # mediaDefinitions   |       .mp4?ttl=
 
+        if _base_url.find('www.godic.net') > 0:
+            self.html_parse_body_tag = 'explain-word-info'
+            self.will_del_div_tags = ['word-thumbnail-container', 'tool']
+
     def display(self):
         print(self.url + '  |  ' + self.html_parse_body_tag)
-        print(self.will_del_div_tags)
+        # print(self.will_del_div_tags)
