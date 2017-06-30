@@ -1,5 +1,4 @@
-from src.crawler.crawler.http_request_crawler import WordHttpRequestCrawler
-from src.crawler.crawler.http_url_parse_setting import HttpURlParse
+from src.crawler.crawler.word_http_crawler import WordHttpCrawler, HttpUrlRule
 
 
 def request_crawl_words(word: str=None):
@@ -10,13 +9,13 @@ def request_crawl_words(word: str=None):
 
 def request_crawl_word(word):
     _url = 'https://www.godic.net/dicts/de/%s' % word
-    _parse = HttpURlParse(_url)
-    _parse.display()
+    _rule = HttpUrlRule(_url)
+    _rule.display()
 
-    if _parse.html_parse_body_tag == '':
+    if _rule.html_parse_body_tag == '':
         return 'Please set parse rule first'
     else:
-        _crawler = WordHttpRequestCrawler(_parse)
+        _crawler = WordHttpCrawler(_rule)
         _crawler.start()
 
         _crawl_body_text, _count, _status = _crawler.get_crawl_result()

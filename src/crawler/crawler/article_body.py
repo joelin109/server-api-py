@@ -1,5 +1,4 @@
-from src.crawler.crawler.http_request_crawler import ArticleHttpRequestCrawler
-from src.crawler.crawler.http_url_parse_setting import HttpURlParse
+from src.crawler.crawler.http_request_crawler import ArticleHttpRequestCrawler, HttpUrlRule
 
 
 def request_crawl_article_bodys():
@@ -12,13 +11,13 @@ def request_crawl_article_bodys():
 
 def crawl_http_url(crawl_url=None):
     _url = '' if crawl_url is None else crawl_url
-    _parse = HttpURlParse(_url)
-    _parse.display()
+    _rule = HttpUrlRule(_url)
+    _rule.display()
 
-    if _parse.html_parse_body_tag == '':
+    if _rule.html_parse_body_tag == '':
         return 'Please set parse rule first'
     else:
-        _crawler = ArticleHttpRequestCrawler(_parse)
+        _crawler = ArticleHttpRequestCrawler(_rule)
         _crawler.start()
         _crawl_body_text, _count, _status = _crawler.get_crawl_result()
         return _crawl_body_text

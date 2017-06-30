@@ -1,8 +1,9 @@
-from bs4 import BeautifulSoup, Comment
 import re
 import requests
-from src.crawler.crawler.http_url_parse_setting import HttpURlParse
-from src.crawler.crawler.html_parse_util import clean_reset_body_html
+from bs4 import BeautifulSoup, Comment
+
+from src.crawler.crawler.conf.http_url_rule import HttpUrlRule
+from src.crawler.crawler.util.html_parse import clean_reset_body_html
 
 _user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
 
@@ -17,11 +18,11 @@ class HttpRequest:
     soup_body = None
     soup_html_text = ''
 
-    def __init__(self, parser: HttpURlParse):
-        self.url = parser.url
-        self.html_parse_div_tag = parser.html_parse_body_tag
-        self.will_del_h5_tags = parser.will_del_h5_tags
-        self.will_del_div_tags = parser.will_del_div_tags
+    def __init__(self, rule: HttpUrlRule):
+        self.url = rule.url
+        self.html_parse_div_tag = rule.html_parse_body_tag
+        self.will_del_h5_tags = rule.will_del_h5_tags
+        self.will_del_div_tags = rule.will_del_div_tags
 
     def request_result(self):
         _response = requests.get(self.url, headers={'User-Agent': _user_agent})
