@@ -175,6 +175,7 @@ class ContentDictionary(BaseModel):
     id = Column(Integer(), primary_key=True)
     wort = Column('wort', String(32), nullable=False, unique=True)
     wort_sex = Column('wort_sex', String(10), nullable=False, default='-', index=True)
+    phonitic_sep = Column('phonitic_sep', String(32), default='')
     phonitic = Column('phonitic', String(32), default='')
     plural = Column('plural', String(32), nullable=False, default='-')
     wort_zh = Column('zh', String(50))
@@ -188,10 +189,12 @@ class ContentDictionary(BaseModel):
     is_ignore = Column('is_ignore', SmallInteger, nullable=False, default=0)
     create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
     last_update_date = Column('last_update_date', DateTime(), nullable=False, default=datetime.now())
+    # -1, 0, 1, 2
     publish_status = Column('publish_status', SmallInteger(), nullable=False, default=0, index=True)
 
     def __init__(self, wort=None):
         self.wort = wort
+        self.wort_zh = ''
         self.create_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.update_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 

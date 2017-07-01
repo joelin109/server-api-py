@@ -32,6 +32,31 @@ class DictionaryLogic(UtilLogic):
         conn.commit()
         return True
 
+    def update_crawl_result(self, new_word):
+        self._verify_except_case()
+
+        try:
+            conn.query(ContentDictionary).filter_by(wort=new_word.wort).update({
+                ContentDictionary.wort_sex: new_word.wort_sex,
+                ContentDictionary.phonitic_sep: new_word.phonitic_sep,
+                ContentDictionary.phonitic: new_word.phonitic,
+                ContentDictionary.type: new_word.type,
+                ContentDictionary.plural: new_word.plural,
+                ContentDictionary.wort_zh: new_word.wort_zh,
+                ContentDictionary.publish_status: new_word.publish_status,
+                ContentDictionary.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            })
+            conn.commit()
+        except Exception as ex:
+            conn.rollback()
+            self.exec_result = False
+            _error = str(ex)[0:500]
+            print(_error)
+            raise NameError(_error)
+        finally:
+            conn.close()
+            return self.exec_result
+
     def delete(self, wort):
         self._verify_except_case()
 
@@ -78,7 +103,10 @@ class WordListFilter(ListFilter):
     def parse(self, data_filter=None):
         self.base_parse(data_filter)
 
-        self.word_letter = data_filter["letter"]
+        if data_filter is not None:
+            self.word_letter = data_filter["letter"]
 
         _filter_letter = 'lower(substring(wort, 1, 1)) = \'%s\' ' % self.word_letter.lower()
+        _filter_status = 'and publish_status = %s ' % self.publish_status
         self.filter_sql = '1=1' if self.word_letter == '' else _filter_letter
+        self.filter_sql += '' if self.publish_status == 0 else _filter_status

@@ -36,18 +36,19 @@ class UtilLogic:
 class ListFilter:
     page_num = 1
     page_size = 100
-    publish_status = 1
+    publish_status = 0
     is_recommend = 0
     offset_limit_sql = ""
     filter_sql = "1=1"
 
     def base_parse(self, data_filter=None):
-        self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
-        self.page_size = 1 if 'page_size' not in data_filter else data_filter['page_size']
+        if data_filter is not None:
+            self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
+            self.page_size = 1 if 'page_size' not in data_filter else data_filter['page_size']
 
-        if 'publish_status' in data_filter:
-            self.publish_status = data_filter['publish_status']
-        if 'is_recommend' in data_filter:
-            self.is_recommend = data_filter["is_recommend"]
+            if 'publish_status' in data_filter:
+                self.publish_status = data_filter['publish_status']
+            if 'is_recommend' in data_filter:
+                self.is_recommend = data_filter["is_recommend"]
 
         self.offset_limit_sql = "offset " + str((self.page_num - 1) * self.page_size) + " limit " + str(self.page_size)

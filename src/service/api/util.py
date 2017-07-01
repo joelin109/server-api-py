@@ -26,8 +26,12 @@ class Api(Resource):
         _performance = self._calculate_performance()
         return api_response_format(result_list, page, _performance)
 
-    def response_detail(self, result_detail):
-        return api_response_detail_format(result_detail)
+    def response_detail(self, result_detail: dict):
+        _performance = self._calculate_performance()
+        _response = api_response_detail_format(result_detail)
+
+        _response["perf"] = _performance
+        return _response
 
     def without_permit(self):
         self.token = ''

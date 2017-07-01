@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from src.service.config import Conf
-from src.service.api.util import api_request_parse, api_response_format, api_response_detail_format
+from src.service.api.util import Api, api_request_parse, api_response_format, api_response_detail_format
 from src.crawler.crawler.article import request_crawl_articles, request_crawl_articles_body
 from src.crawler.crawler.article_body import crawl_http_url
 from src.crawler.crawler.word import request_crawl_words
@@ -43,10 +43,10 @@ class CrawlHttpURLApi(Resource):
         return api_response_detail_format(_result)
 
 
-class CrawlWortApi(Resource):
+class CrawlWortApi(Api):
     def post(self):
-        _request_data = api_request_parse()
+        _request_data = self.request_data()
         print('request_data:', _request_data)
 
         _result = request_crawl_words(_request_data["Word"])
-        return api_response_detail_format(_result)
+        return self.response_detail(_result)

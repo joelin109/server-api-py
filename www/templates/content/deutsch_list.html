@@ -8,12 +8,11 @@
                     <a href="#"><i class="glyphicon glyphicon-star-empty" style="color:#00797e;"> </i> </a>
                     <a href="#"><i class="glyphicon glyphicon-thumbs-up" style="color:#ff7277;"> </i> </a>
                     <a href="#"><i class="glyphicon glyphicon-thumbs-down" style="color:#00797e;"> </i> </a>
-                    <li> - {{ word.plural | truncate(500) | safe }} , {{ word.wort_sex }}</li>
+                    <li> {{ word.plural | truncate(500) | safe }} , {{ word.wort_sex }}</li>
                     <li><a>{{ word.zh }} </a> - <a> {{ word.en }}</a></li>
 
                     <li><a>{{ word.type }}</a></li>
-                    <li><a>A1/A2</a></li>
-                    <li><a> {{ word.is_regel }}</a> - <a> {{ word.is_recommend }}</a></li>
+                    <li><a> {{ word.is_regel }}</a> - <a> {{ word.is_recommend }}</a>  、 <a> {{ word.status }}</a> </li>
 
                 </ol>
             </div>
