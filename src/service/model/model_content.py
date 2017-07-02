@@ -178,7 +178,7 @@ class ContentDictionary(BaseModel):
     phonitic_sep = Column('phonitic_sep', String(32), default='')
     phonitic = Column('phonitic', String(32), default='')
     plural = Column('plural', String(32), nullable=False, default='-')
-    wort_zh = Column('zh', String(50))
+    wort_zh = Column('zh', String(50), nullable=False, default='')
     wort_en = Column('en', String(50))
     level = Column('level', String(10), nullable=False, default='A', index=True)
     type = Column('type', String(10), nullable=False, default='', index=True)
@@ -202,6 +202,7 @@ class ContentDictionary(BaseModel):
         result_row = {
             "id": self.id,
             "wort": self.wort,
+            "phonitic": self.phonitic,
             "wort_sex": self.wort_sex,
             "plural": self.plural,
             "zh": self.wort_zh,
