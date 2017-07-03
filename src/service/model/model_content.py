@@ -186,11 +186,11 @@ class ContentDictionary(BaseModel):
     konjugation = Column('konjugation', String(32))
     is_regel = Column('is_regel', SmallInteger, nullable=False, default=1, index=True)
     is_recommend = Column('is_recommend', SmallInteger, nullable=False, default=0, index=True)
-    is_ignore = Column('is_ignore', SmallInteger, nullable=False, default=0)
+    publish_status = Column('publish_status', SmallInteger, nullable=False, default=0, index=True)
     create_date = Column('create_date', DateTime(), nullable=False, default=datetime.now())
     last_update_date = Column('last_update_date', DateTime(), nullable=False, default=datetime.now())
     # -1, 0, 1, 2
-    publish_status = Column('publish_status', SmallInteger(), nullable=False, default=0, index=True)
+    crawl_status = Column('crawl_status', SmallInteger(), nullable=False, default=0, index=True)
 
     def __init__(self, wort=None):
         self.wort = wort
@@ -207,12 +207,13 @@ class ContentDictionary(BaseModel):
             "plural": self.plural,
             "zh": self.wort_zh,
             "en": self.wort_en,
-            "level": self.level,
             "type": self.type,
+            "level": self.level,
             "is_regel": self.is_regel,
             "is_recommend": self.is_recommend,
-            "status": self.publish_status,
-            "create_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S')
+            "publish_status": self.publish_status,
+            "last_update_date": self.last_update_date.strftime('%Y-%m-%d %H:%M:%S'),
+            "crawl_status": self.crawl_status
         }
         return result_row
 

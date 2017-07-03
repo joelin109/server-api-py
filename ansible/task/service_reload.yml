@@ -6,10 +6,11 @@
     - name: Kill uwsgi
       shell : pkill -f uwsgi -9
       register: kill_uwsgi_result
+      when: kill_nginx_result|success
       ignore_errors: True
 
     - name: Kill gunicorn
-      shell : pkill -f gunicorn -9
+      action: shell pkill -ff gunicorn -9 || true
       # when: kill_uwsgi_result|success
       ignore_errors: True
 

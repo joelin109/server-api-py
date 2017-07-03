@@ -43,8 +43,8 @@ class DictionaryLogic(UtilLogic):
                 ContentDictionary.type: new_word.type,
                 ContentDictionary.plural: new_word.plural,
                 ContentDictionary.wort_zh: new_word.wort_zh,
-                ContentDictionary.publish_status: new_word.publish_status,
-                ContentDictionary.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ContentDictionary.last_update_date: datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                ContentDictionary.crawl_status: new_word.crawl_status
             })
             conn.commit()
         except Exception as ex:
@@ -71,7 +71,7 @@ class DictionaryLogic(UtilLogic):
                 list_filter = WordListFilter()
 
             _filter_sql = list_filter.filter_sql + " ORDER BY lower(wort) " + list_filter.offset_limit_sql
-            # print(_filter_sql)
+            print(_filter_sql)
             # _listResult = session.execute("select * from content_dictionary_de limit 10", mapper=ContentDictionary)
             _listResult = conn.query(ContentDictionary).filter(_filter_sql)
             _total = execute_total(ContentDictionary.__tablename__, list_filter.filter_sql)
@@ -99,14 +99,18 @@ class WordListFilter(ListFilter):
     word_letter = ""
     word_sex = ""
     word_type = ""
+    crawl_status = -2
 
     def parse(self, data_filter=None):
         self.base_parse(data_filter)
 
         if data_filter is not None:
             self.word_letter = data_filter["letter"]
+        if data_filter is not None:
+            self.crawl_status = data_filter["crawl_status"] if 'crawl_status' in data_filter else -2
 
         _filter_letter = 'lower(substring(wort, 1, 1)) = \'%s\' ' % self.word_letter.lower()
-        _filter_status = 'and publish_status = %s ' % self.publish_status
+        _filter_status = ' and publish_status = %s ' % self.publish_status
         self.filter_sql = '1=1' if self.word_letter == '' else _filter_letter
         self.filter_sql += '' if self.publish_status == 0 else _filter_status
+        self.filter_sql += '' if self.crawl_status == -2 else ' and crawl_status = %s ' % self.crawl_status

@@ -27,6 +27,7 @@ class WortListApi(Resource):
         _list_filter = _get_request_data_filter(_request_data)
         try:
             _list_filter = _get_request_data_filter(_request_data)
+
             _logic = DictionaryLogic()
             _result_list, _page = _logic.get_list(_list_filter)
             return api_response_format(_result_list, _page)

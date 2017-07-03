@@ -44,7 +44,7 @@ class ListFilter:
     def base_parse(self, data_filter=None):
         if data_filter is not None:
             self.page_num = 1 if 'page_num' not in data_filter else data_filter['page_num']
-            self.page_size = 1 if 'page_size' not in data_filter else data_filter['page_size']
+            self.page_size = 100 if 'page_size' not in data_filter else data_filter['page_size']
 
             if 'publish_status' in data_filter:
                 self.publish_status = data_filter['publish_status']

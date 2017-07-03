@@ -46,7 +46,7 @@ class CrawlHttpURLApi(Resource):
 class CrawlWortApi(Api):
     def post(self):
         _request_data = self.request_data()
-        print('request_data:', _request_data)
+        # print('request_data:', _request_data)
 
-        _result = request_crawl_words(_request_data["Word"])
+        _result = request_crawl_words(_request_data)
         return self.response_detail(_result)

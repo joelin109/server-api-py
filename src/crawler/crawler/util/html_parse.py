@@ -14,6 +14,7 @@ def clean_reset_body_html(soup, del_div_tags):
     # del_div_tags = ['share-icons', 'inner-wrapper', 'article-tags', 'view-content', 'newsletter-signup']
     for _del_div_class in del_div_tags:
         [s.extract() for s in _soup_body.find_all("div", _del_div_class)]
+        [s.extract() for s in _soup_body.find_all("div", id=_del_div_class)]
 
     _tag_imgs = _soup_body.find_all('img')
     for img in _tag_imgs:
